@@ -32,7 +32,7 @@ app.use(
 );
 
 app.get('/greet', (req, res) => {
-  res.json({ message: 'Hello, welcome to the Multiplayer Quiz Game API!' });
+  res.json({ message: 'Kudo, welcome to the Multiplayer Quiz Game API!' });
 });
 
 io.on("connection", (socket) => {
@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log("Server listening on http://localhost:3000");
 });
