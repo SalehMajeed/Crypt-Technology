@@ -3,7 +3,7 @@ FROM node:18-alpine AS nodejs
 RUN apk add --no-cache curl bash
 RUN npm install -g pm2
 
-WORKDIR /usr/docker-container/kbc
+WORKDIR /usr/docker-container/kbc/backend
 
 COPY ./package.json ./
 
