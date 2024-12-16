@@ -1,13 +1,14 @@
-FROM node:18
+FROM node:18-alpine AS nodejs
 
-WORKDIR /app
+RUN apk add --no-cache curl bash
+RUN npm install -g pm2
 
-COPY package*.json ./
+WORKDIR /usr/docker-container/kbc
+
+COPY ./package.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./ ./
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "server.js", "--watch", "--json", "--silent"]
