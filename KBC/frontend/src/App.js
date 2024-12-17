@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 function App() {
   const [timer, setTimer] = useState(30);
@@ -18,7 +18,7 @@ function App() {
       {/* Card Wrapper */}
       <div
         className="card p-4 rounded shadow-lg text-white"
-        style={{ backgroundColor: '#2e004a', width: '800px', maxWidth: '90%' }}
+        style={{ backgroundColor: "#2e004a", width: "800px", maxWidth: "90%" }}
       >
         {/* Header Section */}
         <div className="text-center mb-3">
@@ -32,13 +32,22 @@ function App() {
         {/* Question Section */}
         <div className="mb-4">
           <p className="text-center mb-3">
-            Arrange these mountain peaks according to their height, from the tallest to the shortest
+            Arrange these mountain peaks according to their height, from the
+            tallest to the shortest
           </p>
           <div className="d-flex flex-column">
-            <button className="btn btn-outline-light mb-2 text-start">A. Everest</button>
-            <button className="btn btn-outline-light mb-2 text-start">B. Kalsubai</button>
-            <button className="btn btn-outline-light mb-2 text-start">C. Nanda Devi</button>
-            <button className="btn btn-outline-light mb-2 text-start">D. Kangchenjunga</button>
+            <button className="btn btn-outline-light mb-2 text-start">
+              A. Everest
+            </button>
+            <button className="btn btn-outline-light mb-2 text-start">
+              B. Kalsubai
+            </button>
+            <button className="btn btn-outline-light mb-2 text-start">
+              C. Nanda Devi
+            </button>
+            <button className="btn btn-outline-light mb-2 text-start">
+              D. Kangchenjunga
+            </button>
           </div>
         </div>
 
