@@ -1,3 +1,4 @@
+
 export class QuizService {
   constructor() {
     this.questions = [
@@ -24,7 +25,7 @@ export class QuizService {
   }
 
   startQuiz() {
-    this.currentQuestion = this.questions.shift();
+    this.currentQuestion = this.questions[1];
     this.responses = [];
     this.questionStartTime = Date.now();
     return {
@@ -40,20 +41,28 @@ export class QuizService {
       timeTaken: responseTime,
       answer,
     });
-
+  
     if (this.responses.length === 3) {
       const sortedResponses = this.responses.sort(
         (a, b) => a.timeTaken - b.timeTaken
       );
       const winner = sortedResponses[0];
+      const losers = sortedResponses.slice(1);
+  
       return {
         winner: {
           userId: winner.userId,
           answer: winner.answer,
           timeTaken: winner.timeTaken - this.questionStartTime,
         },
+        losers: losers.map((loser) => ({
+          userId: loser.userId,
+          answer: loser.answer,
+          timeTaken: loser.timeTaken - this.questionStartTime,
+        })),
       };
     }
     return null;
   }
+  
 }

@@ -1,64 +1,99 @@
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+/* eslint-disable no-unused-vars */
+import { io } from "socket.io-client";
+import { useState, useEffect } from "react";
+import WinnerPage from "./Components/WinnerPage.jsx";
 import "./App.css";
 
+const socket = io("http://localhost:3000");
+
 function App() {
-  const [timer, setTimer] = useState(30);
+  const [question, setQuestion] = useState(null);
+  const [result, setResult] = useState(null);
+  const [answer, setAnswer] = useState("");
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimer((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-    }, 1000);
+    socket.on("question", (data) => {
+      if (data) {
+        console.log("New question received:", data);
+        setQuestion(data);
+        setResult(null);
+        setRole(null); 
+      } else {
+        console.error("No question received from server.");
+      }
+    });
 
-    return () => clearInterval(countdown);
+    socket.on("result", (data) => {
+      setResult(data);
+      if (data.firstResponder === socket.id) {
+        setRole("winner");
+      } else {
+        setRole("loser");
+      }
+    });
+
+    return () => {
+      socket.off("question");
+      socket.off("result");
+    };
   }, []);
 
-  return (
-    <div className="container-fluid bg-dark d-flex justify-content-center align-items-center vh-100 vw-100">
-      {/* Card Wrapper */}
-      <div
-        className="card p-4 rounded shadow-lg text-white"
-        style={{ backgroundColor: "#2e004a", width: "800px", maxWidth: "90%" }}
-      >
-        {/* Header Section */}
-        <div className="text-center mb-3">
-          <p className="small mb-2">Fastest Fingers First Question</p>
-          <h6>PLAYING FOR</h6>
-          <div className="timer-circle d-inline-block">
-            <h2 className="text-success">{timer}</h2>
-          </div>
-        </div>
+  function SubmitFunc() {
+    if (answer.trim()) {
+      socket.emit("answer", { answer });
+      setAnswer("");
+      setQuestion(null);
+    }
+  }
 
-        {/* Question Section */}
-        <div className="mb-4">
-          <p className="text-center mb-3">
-            Arrange these mountain peaks according to their height, from the
-            tallest to the shortest
-          </p>
-          <div className="d-flex flex-column">
-            <button className="btn btn-outline-light mb-2 text-start">
-              A. Everest
-            </button>
-            <button className="btn btn-outline-light mb-2 text-start">
-              B. Kalsubai
-            </button>
-            <button className="btn btn-outline-light mb-2 text-start">
-              C. Nanda Devi
-            </button>
-            <button className="btn btn-outline-light mb-2 text-start">
-              D. Kangchenjunga
-            </button>
-          </div>
-        </div>
+  function handleNextQuestion() {
+    setQuestion(null);
+    setResult(null); 
+    setRole(null);
+    socket.emit("nextQuestion");
+  }
 
-        {/* Reset and Lock Section */}
-        <div className="d-flex justify-content-between">
-          <button className="btn btn-sm btn-secondary">RESET</button>
-          <button className="btn btn-success">LOCK →</button>
+  const displayComponent = () => {
+    if (role === "winner") {
+      return (
+        <>
+          <WinnerPage myResult={result} />
+          
+        </>
+      );
+    } else if (role === "loser") {
+      return (
+        <div>
+          <h2>Better luck next time!</h2>
+          <p>Winner: {result.firstResponder}</p>
+          <p>Answer: {result.answer}</p>
         </div>
-      </div>
-    </div>
-  );
+      );
+    } else {
+      return (
+        <div>
+          <h1>Real Time Quiz App</h1>
+          {question ? (
+            <div>
+              <h2>{question}</h2>
+              <input
+                type="text"
+                value={answer}
+                id="ansBox"
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <button onClick={SubmitFunc}>Submit</button>
+            </div>
+          ) : (
+            <h2>Waiting for question...</h2>
+          )}
+        </div>
+      );
+    }
+  };
+
+  return <div className="mainContainer">{displayComponent()}</div>;
 }
 
 export default App;

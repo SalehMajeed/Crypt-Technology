@@ -25,8 +25,13 @@ export class QuizController {
     socket.on("answer", (data) => {
       const result = this.quizService.recordResponse(socket.id, data.answer);
       if (result) {
-        this.io.emit("result", result.winner);
-        console.log("Quiz winner:", result.winner);
+        this.io.emit("result", {
+          firstResponder: result.winner.userId,
+          answer: result.winner.answer,
+          TimeTaken: result.winner.timeTaken,
+          losers: result.losers,
+        });
+        console.log("Quiz winner:", result);
       }
     });
 
@@ -36,3 +41,4 @@ export class QuizController {
     });
   }
 }
+
