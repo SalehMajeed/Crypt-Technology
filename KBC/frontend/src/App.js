@@ -18,7 +18,7 @@ function App() {
         console.log("New question received:", data);
         setQuestion(data);
         setResult(null);
-        setRole(null); 
+        setRole(null);
       } else {
         console.error("No question received from server.");
       }
@@ -49,7 +49,7 @@ function App() {
 
   function handleNextQuestion() {
     setQuestion(null);
-    setResult(null); 
+    setResult(null);
     setRole(null);
     socket.emit("nextQuestion");
   }
@@ -59,7 +59,6 @@ function App() {
       return (
         <>
           <WinnerPage myResult={result} />
-          
         </>
       );
     } else if (role === "loser") {
@@ -97,3 +96,4 @@ function App() {
 }
 
 export default App;
+
