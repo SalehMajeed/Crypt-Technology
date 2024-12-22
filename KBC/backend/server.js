@@ -1,25 +1,30 @@
-import { createServer } from "http";
+import express from "express";
+import http from "http";
 import { Server } from "socket.io";
-import dotenv from "dotenv";
-import app from "./app.js";
-import { QuizController } from "./Controllers/QuizController.js";
+import cors from "cors";
+import { setupSocket } from "./socket.js";
+import questionController from "./Controllers/questionController.js";
 
-dotenv.config();
-
-const server = createServer(app);
+const app = express();
+const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3001",
-  },
+    cors: {
+        origin: "http://localhost:3001", // React app URL
+        methods: ["GET", "POST"],
+    },
 });
 
-const quizController = new QuizController(io);
+app.use(cors());
+app.use(express.json());
 
-io.on("connection", (socket) => {
-  quizController.handleConnection(socket);
-});
+// Setup Socket.IO
+setupSocket(io);
 
-const port = process.env.PORT || 3000;
-server.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
-});
+// REST API routes
+app.post("/master/distribute", questionController.distributeQuestion);
+app.post("/master/reset", questionController.reset);
+app.post("/candidate/next", questionController.loadNextQuestion);
+
+// Start server
+const PORT = 3000;
+server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
