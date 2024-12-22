@@ -1,64 +1,110 @@
 {
-    "posts": [
-      { "id": "1", "title": "a title", "views": 100 },
-      { "id": "2", "title": "another title", "views": 200 }
-    ],
-    "comments": [
-      { "id": "1", "text": "a comment about post 1", "postId": "1" },
-      { "id": "2", "text": "another comment about post 1", "postId": "1" }
-    ],
-    "profile": {
-      "name": "typicode"
+  "posts": [
+    { "id": "1", "title": "a title", "views": 100 },
+    { "id": "2", "title": "another title", "views": 200 }
+  ],
+  "comments": [
+    { "id": "1", "text": "a comment about post 1", "postId": "1" },
+    { "id": "2", "text": "another comment about post 1", "postId": "1" }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "questions": [
+    {
+      "id": "1",
+      "question": "Who is known as the Father of the Indian Constitution?",
+      "options": {
+        "a": "Mahatma Gandhi",
+        "b": "Jawaharlal Nehru",
+        "c": "B. R. Ambedkar",
+        "d": "Sardar Patel"
+      },
+      "correctAnswer": "c"
     },
-    "questions": [
-      {
-        "id": "1",
-        "question": "Who is known as the Father of the Indian Constitution?",
-        "options": {
-          "a": "Mahatma Gandhi",
-          "b": "Jawaharlal Nehru",
-          "c": "B. R. Ambedkar",
-          "d": "Sardar Patel"
-        },
-        "correctAnswer": "c"
+    {
+      "id": "2",
+      "question": "What is the capital of France?",
+      "options": {
+        "a": "Berlin",
+        "b": "Madrid",
+        "c": "Rome",
+        "d": "Paris"
       },
-      {
-        "id": "2",
-        "question": "What is the capital of France?",
-        "options": {
-          "a": "Berlin",
-          "b": "Madrid",
-          "c": "Rome",
-          "d": "Paris"
-        },
-        "correctAnswer": "d"
-      }
-    ],
-    "players": [
-      {
-        "id": "1",
-        "name": "Player One",
-        "score": 0
+      "correctAnswer": "d"
+    },
+    {
+      "id": "3",
+      "question": "Which planet is known as the Red Planet?",
+      "options": {
+        "a": "Venus",
+        "b": "Mars",
+        "c": "Jupiter",
+        "d": "Saturn"
       },
-      {
-        "id": "2",
-        "name": "Player Two",
-        "score": 0
-      }
-    ],
-    "gameSettings": {
-      "lifelines": ["50-50", "Phone a Friend", "Ask the Audience", "Double Dip"],
-      "prizeMoney": [
-        1000,
-        2000,
-        5000,
-        10000,
-        20000,
-        50000,
-        100000,
-        250000,
-        500000,
-        1000000
-      ]
+      "correctAnswer": "b"
+    },
+    {
+      "id": "4",
+      "question": "What is the chemical symbol for water?",
+      "options": {
+        "a": "O2",
+        "b": "H2O",
+        "c": "CO2",
+        "d": "NaCl"
+      },
+      "correctAnswer": "b"
+    },
+    {
+      "id": "5",
+      "question": "Who wrote the play 'Romeo and Juliet'?",
+      "options": {
+        "a": "Charles Dickens",
+        "b": "Mark Twain",
+        "c": "William Shakespeare",
+        "d": "Leo Tolstoy"
+      },
+      "correctAnswer": "c"
+    },
+    {
+      "id": "6",
+      "question": "What is the largest mammal in the world?",
+      "options": {
+        "a": "African Elephant",
+        "b": "Blue Whale",
+        "c": "Giraffe",
+        "d": "Polar Bear"
+      },
+      "correctAnswer": "b"
+    },
+    {
+      "id": "7",
+      "question": "Which is the smallest prime number?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "5"
+      },
+      "correctAnswer": "b"
     }
+  ],
+  "players": [
+    {
+      "id": "1",
+      "name": "Player One",
+      "score": 0
+    },
+    {
+      "id": "2",
+      "name": "Player Two",
+      "score": 0
+    }
+  ],
+  "gameSettings": {
+    "lifelines": ["50-50", "Phone a Friend", "Ask the Audience", "Double Dip"],
+    "prizeMoney": [
+      1000, 2000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000
+    ]
   }
+}
