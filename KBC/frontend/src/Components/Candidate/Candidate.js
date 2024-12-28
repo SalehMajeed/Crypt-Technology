@@ -6,7 +6,7 @@ import {
   Button,
   Footer,
 } from "./Candidate.styles";
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Candidate() {
   const [ws, setWs] = useState(null)
@@ -78,9 +78,7 @@ function Candidate() {
         </Header>
 
         <Footer>
-          <Link to='/live'>
-            <Button onClick={handleRoute}>JOIN</Button>
-          </Link>
+          <Button onClick={handleRoute}>JOIN</Button>
         </Footer>
       </CardWrapper>
     </Container>

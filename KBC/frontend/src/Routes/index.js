@@ -10,7 +10,7 @@ const AppRoutes = () => {
     {
       path: ROUTES.HOME,
       exact: true,
-      element: <Home />,
+      element: <Home />
     },
     {
       path: ROUTES.MASTER,
