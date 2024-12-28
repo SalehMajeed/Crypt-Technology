@@ -1,6 +1,7 @@
 const ROUTES = {
+  HOME: '/',
   MASTER: "/master",
-  CANDIDATE: "/candidte",
+  CANDIDATE: "/candidate",
   LIVE: "/live",
 };
 

@@ -6,9 +6,31 @@ import {
   Button,
   Footer,
 } from "./Master.styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Master() {
+  const navigate = useNavigate()
+  const handleRoute = async () => {
+    try{
+      let ws = new WebSocket('ws://localhost:3002/')
+   
+      ws.onopen = ()=>{
+       console.log('web socket connected successfully')
+   
+       ws.send(JSON.stringify({role:'master'}))
+      } 
+   
+      ws.send(JSON.stringify({type:'start-quiz'}))
+    }catch(err){
+      console.log(err)
+    }finally{
+      // navigate('/live')
+      alert('quiz is now started')
+    }
+
+   
+  }
   return (
     <Container>
       <CardWrapper>
@@ -18,9 +40,7 @@ function Master() {
         </Header>
 
         <Footer>
-          <Link to="/live">
-            <Button>Start</Button>
-          </Link> 
+          <Button onClick={handleRoute}> Start</Button>
         </Footer>
       </CardWrapper>
     </Container>

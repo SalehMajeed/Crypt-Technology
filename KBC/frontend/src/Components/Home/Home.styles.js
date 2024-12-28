@@ -2,46 +2,31 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
+  flex-direction:column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-    to right,
-    #000428,
-    #004e92
-  ); 
+  gap:25px;
+  background:url(https://www.spiretech.in/assets/images/banner2.png); 
+   background-position: center;
+    background-size: cover;
   height: 100vh;
   width: 100vw;
 `;
 
-export const CardWrapper = styled.div`
-  background-color: #2e004a;
-  width: 800px;
-  max-width: 90%;
-  padding: 32px; 
-  border-radius: 12px; 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  color: white;
-  text-align: center;
+export const Pera = styled.p`
+font-size: ${props => props.size ? props.size : 1.5}rem;
+    color: rgba(255, 255, 255, 0.6);
 `;
 
-export const Header = styled.div`
-  margin-bottom: 32px;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-
-  p {
-    font-size: 1.2rem; 
-    color: #ddd; 
-  }
+export const Heading = styled.h1`
+font-size: 4rem;
+color: white;
 `;
 
 export const Button = styled.button`
   background-color: ${({ disabled }) => (disabled ? "#6c757d" : "#28a745")};
   color: white;
-  padding: 12px 24px;
+  padding: 10px 22px;
   border: none;
   border-radius: 4px;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
@@ -62,7 +47,9 @@ export const Button = styled.button`
   }
 `;
 
-export const Footer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+// export const InnerContainer = styled.div`
+// display:flex;
+// gap:15px;
+// align-item:center;
+// flex-direction: ${props => props.dira ? props.dira : 'row'}
+// `
