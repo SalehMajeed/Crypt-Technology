@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
   quizController.handleConnection(socket);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 server.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
