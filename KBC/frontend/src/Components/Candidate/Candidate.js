@@ -79,7 +79,6 @@ function Candidate() {
 
         <Footer>
           <Button onClick={handleRoute}>JOIN</Button>
-
         </Footer>
       </CardWrapper>
     </Container>

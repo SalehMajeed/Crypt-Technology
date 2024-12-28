@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 function Home() {
     return (
         <Container>
-            <Heading>Quiz Platform</Heading>
+            <Heading>KBC Platform</Heading>
             <div className='inner-cont'>
                 <Pera>Dive into a World of Endless Trivia Fun</Pera>
                 <div id='cont'>

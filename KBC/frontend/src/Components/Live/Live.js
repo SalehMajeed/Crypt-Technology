@@ -8,7 +8,7 @@ import {
   Footer,
 } from "./Live.styles";
 
-function App() {
+function Live() {
   const [timer, setTimer] = useState(30);
 
   useEffect(() => {
@@ -23,19 +23,19 @@ function App() {
     <Container>
       <CardWrapper>
         <Header>
-          <p>Fastest Fingers First Question</p>
-          <h6>PLAYING FOR</h6>
           <TimerCircle>
             <h2>{timer}</h2>
           </TimerCircle>
         </Header>
 
         <div>
-          <p>
-            Arrange these mountain peaks according to their height, from the
-            tallest to the shortest
-          </p>
-          <div>
+          <div className="question">
+            <p>
+              Arrange these mountain peaks according to their height, from the
+              tallest to the shortest
+            </p>
+          </div>
+          <div className="answers">
             <Button>A. Everest</Button>
             <Button>B. Kalsubai</Button>
             <Button>C. Nanda Devi</Button>
@@ -53,4 +53,4 @@ function App() {
   );
 }
 
-export default App;
+export default Live;
