@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-// import useSound from "use-sound";
+import useSound from "use-sound";
 import { useNavigate } from "react-router-dom";
 import fiftyFiftyImg from "../assets/fifty_fifty.png";
 import audiencePoll from "../assets/audience_poll.png";
@@ -14,9 +14,9 @@ import {
   Button,
   Footer,
 } from "./Live.styles";
-const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
-// import questionPlaySound from "../assets/play.mp3";
+import questionPlaySound from "../assets/play.mp3";
+const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
 const socket = io("http://localhost:3001");
 
@@ -28,21 +28,21 @@ function App() {
   const [winner, setWinner] = useState(null);
   const navigate = useNavigate();
 
-  // const [play] = useSound(questionPlaySound, {
-  //   volume: 0.5,
-  //   interupt: true, // Adjust volume as needed
-  // });
-  // useEffect(() => {
-  //   const playSound = async () => {
-  //     try {
-  //       await play(); // Attempt to play sound
-  //     } catch (error) {
-  //       console.error("Autoplay blocked or other error:", error);
-  //     }
-  //   };
+  const [play] = useSound(questionPlaySound, {
+    volume: 0.5,
+    interupt: true, // Adjust volume as needed
+  });
+  useEffect(() => {
+    const playSound = async () => {
+      try {
+        await play(); // Attempt to play sound
+      } catch (error) {
+        console.error("Autoplay blocked or other error:", error);
+      }
+    };
 
-  //   playSound();
-  // }, [play]);
+    playSound();
+  }, [play]);
 
   const moneyList = [
     { id: "1)", amount: "Rs. 500" },
