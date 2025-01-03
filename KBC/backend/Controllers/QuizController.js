@@ -58,6 +58,7 @@ export class QuizController {
       const currentQuestion = data.find((item) => item.id == id);
       if (currentQuestion) {
         socket.emit("currentQuestion", currentQuestion);
+        console.log(currentQuestion)
       } else {
         console.error(`Question with ID ${id} not found.`);
         socket.emit("currentQuestion", {
@@ -68,7 +69,7 @@ export class QuizController {
     });
 
     socket.on("answer", (data) => {
-      console.log("stored answer" + data.answer)
+      console.log("stored answer " + data.answer)
       const result = this.quizService.recordResponse(
         socket.id,
         data.answer,

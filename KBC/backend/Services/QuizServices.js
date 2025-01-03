@@ -22,7 +22,7 @@ export class QuizService {
 
     this.activeUsers.push(userId);
 
-    if (this.activeUsers.length === 3) {
+    if (this.activeUsers.length === 2) {
       // Notify master that all candidates have joined
       return { success: true, candidateData: this.activeUsers };
     }
@@ -62,7 +62,7 @@ export class QuizService {
     }
   
     const isCorrect = answer === this.currentQuestion.correctAnswer;
-  
+    console.log(this.currentQuestion.correctAnswer + 'previous ans')
     const response = {
       userId,
       answer,

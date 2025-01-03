@@ -1,25 +1,187 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
   display: flex;
   justify-content: center;
+  background: linear-gradient(180deg, #0000, #020230),
+    url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
+      no-repeat center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
   align-items: center;
   background-color: #000;
   height: 100vh;
   width: 100vw;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const CardWrapper = styled.div`
-  background-color: #2e004a;
-  width: 800px;
-  max-width: 90%;
-  padding: 16px;
+  height: 100vh;
+  width: 100%;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: white;
   text-align: center;
+  font-size: 1.8rem;
+
+  .options {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr;
+    margin: 30px auto 0;
+    padding: 10px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .submitBtnDiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-top: 50px;
+  }
+
+  .question {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    word-break: break-word;
+    margin-bottom: 20px;
+  }
+
+  .elementsDiv {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    height: 100vh;
+  }
+  .quizElements {
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, #0000, #020230),
+      url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
+        no-repeat center center;
+    background-size: cover;
+  }
+  .sideBar {
+    background: #020230;
+    align-items: center;
+    text-align: center;
+  }
+
+  li {
+    display: flex;
+    border-bottom: 1px solid #ffa800;
+    justify-content: space-between;
+    background: #020230;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 400;
+    margin: 10px;
+  }
+
+  li:hover {
+    background-color: #ffa800;
+    border-radius: 5px;
+  }
+
+  .indexOfPrice {
+    width: 20%;
+  }
+  .price {
+    width: 100%;
+  }
+
+  .lifeLine {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  .expertLifeLine {
+    height: 73px;
+  }
+
+  img {
+    height: 80px;
+    height: 80px;
+  }
+
+  p {
+    background: linear-gradient(#100241, #000);
+    border: 1px solid #ffa800;
+    border-radius: 35px;
+    font-size: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    margin: 0 auto;
+    font-size: 1.8rem;
+  }
+
+  button.submit-btn {
+    background: linear-gradient(#100241, #000);
+    border: 1px solid #ffa800;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px auto 0;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    width: 250px;
+    font-weight: 400;
+    &:hover {
+      background: #000;
+      transform: scale(1.05);
+    }
+  }
 `;
 
+export const Button = styled.button`
+  background: linear-gradient(#100241, #000);
+  border: 2px solid #ffa800;
+  border-radius: 35px;
+  color: white;
+  font-weight: 400
+  font-weight: 300;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  width: 80%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #000;
+    transform: scale(1.05);
+  }
+
+  &.selected {
+    background: lightblue;
+    color: black;
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    color: #666;
+  }
+`;
 export const Header = styled.div`
   margin-bottom: 16px;
   display: flex;
@@ -39,7 +201,7 @@ export const Header = styled.div`
 
 export const TimerCircle = styled.div`
   background-color: #121212;
-  border: 2px solid green;
+  border: 2px solid yellow;
   border-radius: 50%;
   width: 80px;
   height: 80px;
@@ -53,31 +215,10 @@ export const TimerCircle = styled.div`
   }
 `;
 
-export const Button = styled.button`
-  background: ${({ success, secondary }) =>
-    success ? "#28a745" : secondary ? "#6c757d" : "transparent"};
-  color: ${({ success, secondary }) =>
-    success || secondary ? "white" : "lightgray"};
-  border: ${({ success, secondary }) =>
-    success || secondary ? "none" : "1px solid lightgray"};
-  padding: ${({ small }) => (small ? "6px 12px" : "12px")};
-  margin-bottom: 8px;
-  text-align: ${({ centered }) => (centered ? "center" : "left")};
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-  max-width: ${({ small }) => (small ? "120px" : "none")};
-
-  &:hover {
-    background-color: #20c997;
-    color: #0f0f0f;
-    opacity: 0.9;
-  }
-`;
-
 export const Footer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin-top: 25px;
 `;
