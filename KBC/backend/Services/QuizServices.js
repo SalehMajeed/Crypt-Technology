@@ -1,68 +1,118 @@
-
 export class QuizService {
   constructor() {
-    this.questions = [
-      "What will be the output of -10 + 10?",
-      "What will be the output of 'a' === 1?",
-      "What will be the output of typeof NaN?",
-    ];
+    this.questions = [];  // Store questions
     this.activeUsers = [];
     this.responses = [];
     this.currentQuestion = null;
     this.questionStartTime = null;
+    this.masterConnected = false;
   }
 
-  addUser(userId) {
-    if (this.activeUsers.length >= 3) {
-      return { error: "No more users allowed!" };
+  addUser(userId, role) {
+    if (role === "master") {
+      if (this.masterConnected) {
+        return { error: "Only one master is allowed!" };
+      }
+      this.masterConnected = true;
+    } else if (role === "candidate") {
+      if (this.activeUsers.length >= 3) {
+        return { error: "No more users allowed!" };
+      }
     }
+
     this.activeUsers.push(userId);
-    return { success: true, users: this.activeUsers };
+
+    if (this.activeUsers.length === 2) {
+      // Notify master that all candidates have joined
+      return { success: true, candidateData: this.activeUsers };
+    }
+
+    return { success: true };
   }
 
   removeUser(userId) {
     this.activeUsers = this.activeUsers.filter((id) => id !== userId);
+    if (this.activeUsers.length === 0) {
+      this.masterConnected = false;
+    }
   }
 
   startQuiz() {
-    this.currentQuestion = this.questions[1];
+    if (this.activeUsers.length < 3) {
+      return { error: "Not enough users to start the quiz!" };
+    }
+
+    if (this.questions.length === 0) {
+      return { error: "No questions available!" };
+    }
+
+    this.currentQuestion = this.questions[0];
     this.responses = [];
     this.questionStartTime = Date.now();
+
     return {
       question: this.currentQuestion,
       startTime: this.questionStartTime,
     };
   }
 
-  recordResponse(userId, answer) {
-    const responseTime = Date.now();
-    this.responses.push({
-      userId,
-      timeTaken: responseTime,
-      answer,
-    });
+  recordResponse(userId, answer, responseTime) {
+    if (!this.currentQuestion || !this.currentQuestion.correctAnswer) {
+      return { error: "Current question is not defined or missing correct answer!" };
+    }
   
-    if (this.responses.length === 3) {
-      const sortedResponses = this.responses.sort(
-        (a, b) => a.timeTaken - b.timeTaken
+    const isCorrect = answer === this.currentQuestion.correctAnswer;
+    console.log(this.currentQuestion.correctAnswer + 'previous ans')
+    const response = {
+      userId,
+      answer,
+      responseTime,
+      isCorrect,
+    };
+  
+    // Store the response in the array
+    this.responses.push(response);
+  
+    // Immediately log the response
+    console.log("Response recorded:", response);
+  
+    if (isCorrect) {
+      const correctResponses = this.responses.filter((res) => res.isCorrect);
+      const fastestCorrect = correctResponses.reduce((prev, current) =>
+        prev.responseTime < current.responseTime ? prev : current
       );
-      const winner = sortedResponses[0];
-      const losers = sortedResponses.slice(1);
   
       return {
-        winner: {
-          userId: winner.userId,
-          answer: winner.answer,
-          timeTaken: winner.timeTaken - this.questionStartTime,
-        },
-        losers: losers.map((loser) => ({
-          userId: loser.userId,
-          answer: loser.answer,
-          timeTaken: loser.timeTaken - this.questionStartTime,
-        })),
+        status: "correct",
+        userId: fastestCorrect.userId,
+        responseTime: fastestCorrect.responseTime,
+      };
+    } else {
+      return {
+        status: "incorrect",
+        userId,
       };
     }
-    return null;
   }
   
+  
+  getFastestCorrectAnswer() {
+    if (!this.currentQuestion) {
+      console.error("Current question is not set.");
+      return null;
+    }
+
+    const correctResponses = this.responses.filter(
+      (response) => response.answer === this.currentQuestion.correctAnswer
+    );
+
+    if (correctResponses.length === 0) {
+      return null;
+    }
+
+    const fastestCorrect = correctResponses.reduce((prev, current) =>
+      prev.responseTime < current.responseTime ? prev : current
+    );
+    return fastestCorrect;
+  }
 }
