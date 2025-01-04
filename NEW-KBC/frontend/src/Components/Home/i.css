@@ -1,0 +1,23 @@
+.inner-cont {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0.7px solid rgba(255, 255, 255, 0.3);
+    padding: 20px 40px;
+    border-radius: 10px;
+}
+
+
+#cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#cont2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
