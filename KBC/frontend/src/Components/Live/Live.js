@@ -32,6 +32,10 @@ function App() {
     volume: 0.5,
     interupt: true, // Adjust volume as needed
   });
+<<<<<<< Updated upstream
+=======
+  
+>>>>>>> Stashed changes
   useEffect(() => {
     const playSound = async () => {
       try {
