@@ -1,36 +1,79 @@
 let masterSocket = null;
-let candidates = [];
-let liveUsers = [];
+let connectedUser = [];
 const maxCandidates = process.env.USER_LIMIT || 5;
 const maxLiveUsers = process.env.LIVE_USER_LIMIT || 5;
 
+let timer = null;
+let responseTimes = {};
+
+let initialState = {
+  waitForMaster: true,
+  startTime: null,
+  startTimer: false,
+  startQuiz: false,
+  distributedQuestion: []
+}
+
+const resetInitialState = () => {
+  initialState = {
+    waitForMaster: false,
+    startTime: null,
+    startTimer: false,
+    startQuiz: false,
+    distributedQuestion: []
+  };
+  timer = null;
+  responseTimes = {};
+}
+
 const connectAsMaster = (socket) => {
+  let isConnected = true;
   if (masterSocket) {
     console.log('Master already connected');
-    return false;
+    isConnected = false;
   }
   console.log('Master connected');
-  return true;
+  const distributedQuestion = [1, 2, 3, 4];
+  initialState = { ...initialState, waitForMaster: false, distributedQuestion };
+
+  if (!isConnected) {
+    socket.emit('master-connection-failed', { message: 'Master already connected', initialState });
+  } else {
+    socket.emit('master-connected', { message: 'Connected as Master', initialState });
+  }
 };
 
 const connectAsCandidate = (socket) => {
-  if (candidates.length >= maxCandidates) {
+  let isConnected = true;
+  const totalCandidates = getRoleCount('candidate');
+  if (totalCandidates >= maxCandidates) {
     console.log('Candidate limit reached');
-    return false;
+    isConnected = false;
+  } else {
+    connectedUser.push({ id: socket.id, role: 'candidate' });
+    console.log('Candidate connected');
   }
-  candidates.push({ id: socket.id, role: 'candidate' });
-  console.log('Candidate connected');
-  return true;
+  if (!isConnected) {
+    socket.emit('candidate-connection-failed', { message: 'Candidate limit reached' });
+  } else {
+    socket.emit('candidate-connected', { initialState });
+  }
 };
 
 const connectAsLive = (socket) => {
-  if (liveUsers.length >= maxLiveUsers) {
+  let isConnected = true;
+  const totalLive = getRoleCount('live');
+  if (totalLive >= maxLiveUsers) {
     console.log('Live limit reached');
-    return false;
+    isConnected = false;
   }
-  liveUsers.push({ id: socket.id, role: 'live' });
+  connectedUser.push({ id: socket.id, role: 'live' });
   console.log('Live user connected');
-  return true;
+  if (!isConnected) {
+    socket.emit('live-connection-failed', { message: 'Live limit reached' });
+  } else {
+    socket.emit('live-connected', { initialState });
+  }
 };
 
 const disconnectMaster = () => {
@@ -39,29 +82,75 @@ const disconnectMaster = () => {
 };
 
 const disconnectCandidate = (socket) => {
-  candidates = candidates.filter((candidate) => candidate !== socket);
+  connectedUser = connectedUser.filter((candidate) => candidate !== socket);
   console.log('Candidate disconnected');
 };
 
 const disconnectLive = (socket) => {
-  liveUsers = liveUsers.filter((liveUser) => liveUser !== socket);
+  connectedUser = connectedUser.filter((liveUser) => liveUser !== socket);
   console.log('Live user disconnected');
 };
 
+const startQuiz = (socket, io) => {
+  initialState = { ...initialState, startQuiz: true };
+  console.log(initialState);
+  connectedUser.forEach(eachUser => {
+    if (eachUser.role !== 'master') {
+      io.to(eachUser.id).emit('quiz-started', initialState);
+    }
+  });
+};
+
+const resetQuiz = (socket, io) => {
+  resetInitialState();
+  io.emit('quiz-started', initialState);
+};
+
+const startTimer = (socket, io) => {
+  startTime = Date.now();
+  initialState = { ...initialState, startTime, startTimer: true }
+  connectedUser.forEach(eachUser => {
+    if (eachUser.role !== 'master') {
+      io.to(eachUser.id).emit('quiz-started', initialState);
+    }
+  });
+};
+
+const stopTimer = (socket, io) => {
+  if (socket === connectionService.masterSocket && timer) {
+    clearInterval(timer);
+    io.emit('time-stopped', { message: 'Time has stopped!' });
+  }
+};
+
+const checkAllResponses = (io) => {
+  io.emit('all-responses', { responseTimes });
+};
+
+const submitResponse = (data, io) => {
+  const { userId, time } = data;
+  responseTimes[userId] = time;
+  console.log(responseTimes);
+  // io.emit('response-submitted', { userId, time });
+  // checkAllResponses(io);
+}
+
 const isCandidate = (socket) => {
-  return candidates.includes(socket);
+  return connectedUser.findIndex(eachUser => eachUser.id === socket);
 };
 
 const isLive = (socket) => {
-  return liveUsers.includes(socket);
+  return connectedUser.findIndex(eachUser => eachUser.id === socket);
+
 };
 
-const getCandidateCount = () => {
-  return candidates.length;
-};
-
-const getLiveUserCount = () => {
-  return liveUsers.length;
+const getRoleCount = (role) => {
+  return connectedUser.reduce((acc, eachUser) => {
+    if (eachUser.role === role) {
+      acc += 1;
+    };
+    return acc;
+  }, 0);;
 };
 
 module.exports = {
@@ -73,6 +162,9 @@ module.exports = {
   disconnectLive,
   isCandidate,
   isLive,
-  getCandidateCount,
-  getLiveUserCount
+  startQuiz,
+  resetQuiz,
+  startTimer,
+  stopTimer,
+  submitResponse
 };

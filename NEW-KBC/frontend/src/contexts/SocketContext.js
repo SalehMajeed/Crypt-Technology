@@ -5,35 +5,34 @@ const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState('');
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     const newSocket = io('http://localhost:3000');
     setSocket(newSocket);
     
     newSocket.on('master-connected', (data) => {
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     newSocket.on('candidate-connected', (data) => {
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     newSocket.on('live-connected', (data) => {
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     newSocket.on('master-connection-failed', (data) => {
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     newSocket.on('candidate-connection-failed', (data) => {
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     newSocket.on('quiz-started', (data) => {
-      console.log(newSocket);
-      setConnectionStatus(data.message);
+      setData(data);
     });
 
     return () => {
@@ -44,7 +43,7 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, connectionStatus }}>
+    <SocketContext.Provider value={{ socket, data }}>
       {children}
     </SocketContext.Provider>
   );
