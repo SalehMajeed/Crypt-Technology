@@ -19,7 +19,7 @@ const connectAsCandidate = (socket) => {
     console.log('Candidate limit reached');
     return false;
   }
-  candidates.push(socket);
+  candidates.push({ id: socket.id, role: 'candidate' });
   console.log('Candidate connected');
   return true;
 };
@@ -29,7 +29,7 @@ const connectAsLive = (socket) => {
     console.log('Live limit reached');
     return false;
   }
-  liveUsers.push(socket);
+  liveUsers.push({ id: socket.id, role: 'live' });
   console.log('Live user connected');
   return true;
 };

@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const connectionController = require('./controllers/connectionController');
+const { handleConnection, handleDisconnection, handleStartQuiz, handleResetQuiz, handleStartTimer, handleStopTimer, handleSubmitResponse } = require('./controllers/connectionController');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,20 +17,23 @@ io.on('connection', (socket) => {
   console.log('New connection established');
 
   socket.on('connect-master', () => {
-    connectionController.handleConnection(socket, JSON.stringify({ type: 'connect-master' }));
+    handleConnection(socket, JSON.stringify({ type: 'connect-master' }))
   });
-
   socket.on('connect-candidate', () => {
-    connectionController.handleConnection(socket, JSON.stringify({ type: 'connect-candidate' }));
-  });
-
+    handleConnection(socket, JSON.stringify({ type: 'connect-candidate' }))
+  }
+  );
   socket.on('connect-live', () => {
-    connectionController.handleConnection(socket, JSON.stringify({ type: 'connect-live' }));
-  });
+    handleConnection(socket, JSON.stringify({ type: 'connect-live' }))
+  }
+  );
+  socket.on('disconnect', () => handleDisconnection(socket));
 
-  socket.on('disconnect', () => {
-    connectionController.handleDisconnection(socket);
-  });
+  socket.on('start-quiz', () => handleStartQuiz(socket, io));
+  socket.on('reset-quiz', () => handleResetQuiz(socket, io));
+  socket.on('start-timer', () => handleStartTimer(socket, io));
+  socket.on('stop-timer', () => handleStopTimer(socket, io));
+  socket.on('submit-response', (data) => handleSubmitResponse(data, io));
 });
 
 app.get('/', (req, res) => {
