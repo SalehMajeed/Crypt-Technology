@@ -10,15 +10,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     const newSocket = io('http://localhost:3000');
     setSocket(newSocket);
-
-    newSocket.on('master-connection-failed', (data) => {
-      setConnectionStatus(data.message);
-    });
-
-    newSocket.on('candidate-connection-failed', (data) => {
-      setConnectionStatus(data.message);
-    });
-
+    
     newSocket.on('master-connected', (data) => {
       setConnectionStatus(data.message);
     });
@@ -28,6 +20,19 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('live-connected', (data) => {
+      setConnectionStatus(data.message);
+    });
+
+    newSocket.on('master-connection-failed', (data) => {
+      setConnectionStatus(data.message);
+    });
+
+    newSocket.on('candidate-connection-failed', (data) => {
+      setConnectionStatus(data.message);
+    });
+
+    newSocket.on('quiz-started', (data) => {
+      console.log(newSocket);
       setConnectionStatus(data.message);
     });
 

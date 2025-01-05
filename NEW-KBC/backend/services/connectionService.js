@@ -9,7 +9,6 @@ const connectAsMaster = (socket) => {
     console.log('Master already connected');
     return false;
   }
-  masterSocket = socket;
   console.log('Master connected');
   return true;
 };
@@ -75,5 +74,5 @@ module.exports = {
   isCandidate,
   isLive,
   getCandidateCount,
-  getLiveUserCount,
+  getLiveUserCount
 };

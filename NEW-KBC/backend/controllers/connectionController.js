@@ -47,9 +47,7 @@ const handleDisconnection = (socket) => {
 
 
 const handleStartQuiz = (socket, io) => {
-  if (socket === masterSocket) {
-    io.emit('quiz-started', { message: 'Quiz has started!' });
-  }
+  io.emit('quiz-started', { message: 'Quiz has started!' });
 };
 
 const handleResetQuiz = (socket, io) => {
@@ -57,7 +55,7 @@ const handleResetQuiz = (socket, io) => {
 };
 
 const handleStartTimer = (socket, io) => {
-  if (socket === masterSocket) {
+  if (socket === connectionService.masterSocket) {
     startTime = Date.now();
     io.emit('time-started', { message: 'Timer started' });
     timer = setInterval(() => {
@@ -72,7 +70,7 @@ const handleStartTimer = (socket, io) => {
 };
 
 const handleStopTimer = (socket, io) => {
-  if (socket === masterSocket && timer) {
+  if (socket === connectionService.masterSocket && timer) {
     clearInterval(timer);
     io.emit('time-stopped', { message: 'Time has stopped!' });
   }

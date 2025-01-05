@@ -16,24 +16,17 @@ const PORT = process.env.PORT || 3000;
 io.on('connection', (socket) => {
   console.log('New connection established');
 
-  socket.on('connect-master', () => {
-    handleConnection(socket, JSON.stringify({ type: 'connect-master' }))
-  });
-  socket.on('connect-candidate', () => {
-    handleConnection(socket, JSON.stringify({ type: 'connect-candidate' }))
-  }
-  );
-  socket.on('connect-live', () => {
-    handleConnection(socket, JSON.stringify({ type: 'connect-live' }))
-  }
-  );
-  socket.on('disconnect', () => handleDisconnection(socket));
-
+  socket.on('connect-master', () => handleConnection(socket, JSON.stringify({ type: 'connect-master' })));
+  socket.on('connect-candidate', () => handleConnection(socket, JSON.stringify({ type: 'connect-candidate' })));
+  socket.on('connect-live', () => handleConnection(socket, JSON.stringify({ type: 'connect-live' })));
+  
   socket.on('start-quiz', () => handleStartQuiz(socket, io));
   socket.on('reset-quiz', () => handleResetQuiz(socket, io));
   socket.on('start-timer', () => handleStartTimer(socket, io));
   socket.on('stop-timer', () => handleStopTimer(socket, io));
   socket.on('submit-response', (data) => handleSubmitResponse(data, io));
+  
+  socket.on('disconnect', () => handleDisconnection(socket));
 });
 
 app.get('/', (req, res) => {
