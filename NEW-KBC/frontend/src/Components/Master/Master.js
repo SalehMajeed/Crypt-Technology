@@ -1,4 +1,3 @@
-// src/components/Master.js
 import { useContext, useEffect } from 'react';
 import SocketContext from '../../contexts/SocketContext';
 

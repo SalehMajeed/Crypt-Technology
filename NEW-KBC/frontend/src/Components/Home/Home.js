@@ -25,6 +25,10 @@ function Home() {
                         <Link to='master'>
                             <Button>Master</Button>
                         </Link>
+                        <Pera size='2rem'>-Or-</Pera>
+                        <Link to='live'>
+                            <Button>Live</Button>
+                        </Link>
                     </div >
                 </div>
             </div>
