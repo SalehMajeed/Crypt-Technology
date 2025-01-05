@@ -1,6 +1,8 @@
 let masterSocket = null;
 let candidates = [];
-const maxCandidates = process.env.USER_LIMIT
+let liveUsers = [];
+const maxCandidates = process.env.USER_LIMIT || 5;
+const maxLiveUsers = process.env.LIVE_USER_LIMIT || 5;
 
 const connectAsMaster = (socket) => {
   if (masterSocket) {
@@ -22,6 +24,16 @@ const connectAsCandidate = (socket) => {
   return true;
 };
 
+const connectAsLive = (socket) => {
+  if (liveUsers.length >= maxLiveUsers) {
+    console.log('Live limit reached');
+    return false;
+  }
+  liveUsers.push(socket);
+  console.log('Live user connected');
+  return true;
+};
+
 const disconnectMaster = () => {
   masterSocket = null;
   console.log('Master disconnected');
@@ -32,14 +44,36 @@ const disconnectCandidate = (socket) => {
   console.log('Candidate disconnected');
 };
 
+const disconnectLive = (socket) => {
+  liveUsers = liveUsers.filter((liveUser) => liveUser !== socket);
+  console.log('Live user disconnected');
+};
+
+const isCandidate = (socket) => {
+  return candidates.includes(socket);
+};
+
+const isLive = (socket) => {
+  return liveUsers.includes(socket);
+};
+
 const getCandidateCount = () => {
   return candidates.length;
+};
+
+const getLiveUserCount = () => {
+  return liveUsers.length;
 };
 
 module.exports = {
   connectAsMaster,
   connectAsCandidate,
+  connectAsLive,
   disconnectMaster,
   disconnectCandidate,
+  disconnectLive,
+  isCandidate,
+  isLive,
   getCandidateCount,
+  getLiveUserCount,
 };

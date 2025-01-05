@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: '*',
-  }
+  },
 });
 
 const PORT = process.env.PORT || 3000;
@@ -22,6 +22,10 @@ io.on('connection', (socket) => {
 
   socket.on('connect-candidate', () => {
     connectionController.handleConnection(socket, JSON.stringify({ type: 'connect-candidate' }));
+  });
+
+  socket.on('connect-live', () => {
+    connectionController.handleConnection(socket, JSON.stringify({ type: 'connect-live' }));
   });
 
   socket.on('disconnect', () => {
