@@ -1,40 +1,48 @@
-import { useContext, useEffect } from 'react';
-import SocketContext from '../../contexts/SocketContext';
-
+import { useContext, useEffect } from "react";
+import SocketContext from "../../contexts/SocketContext";
+import { Container, Button , Pera, CardWrapper } from "./Master.styles";
 const Master = () => {
-  const { socket, data } = useContext(SocketContext);
+  const { socket, data, questions } = useContext(SocketContext);
 
   console.log(data);
 
   useEffect(() => {
     if (socket) {
-      socket.emit('connect-master');
+      socket.emit("connect-master");
     }
   }, [socket]);
 
   const handleStartQuiz = () => {
-    socket.emit('start-quiz');
-  }
+    socket.emit("start-quiz");
+  };
 
   const handleResetQuiz = () => {
-    socket.emit('reset-quiz');
-  }
+    socket.emit("reset-quiz");
+  };
 
   const handleStartTimer = () => {
-    socket.emit('start-timer');
-  }
+    socket.emit("start-timer");
+  };
 
   const handleStopTimer = () => {
-    socket.emit('stop-timer');
-  }
+    socket.emit("stop-timer");
+  };
 
-  return (<div>
-    {socket && socket.connected ? <div><h2>Master Role</h2>
-      <button onClick={handleStartQuiz}>Start Quiz</button>
-      <button onClick={handleResetQuiz}>Reset Quiz</button>
-      <button onClick={handleStartTimer}>Start Timer</button>
-      <button onClick={handleStopTimer}>Stop Timer</button></div> : <div>loading</div>}
-  </div>
+  return (
+    <Container>
+      {socket && socket.connected ? (
+        <CardWrapper>
+          <Pera>Master-Role</Pera>
+          <Button onClick={handleResetQuiz}>Reset Quiz</Button>
+          <Button onClick={handleStartQuiz}>Start Quiz</Button>
+          <Button onClick={handleStartTimer}>Start Timer</Button>
+          <Button onClick={handleStopTimer}>Stop Timer</Button>
+        </CardWrapper>
+      ) : (
+        <div>
+        <Pera>Loading</Pera></div>
+      )}
+    </Container>
   );
 };
 

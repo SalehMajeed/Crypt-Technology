@@ -3,8 +3,10 @@ const ROUTES = {
   MASTER: "/master",
   CANDIDATE: "/candidate",
   LIVE: "/live",
-  WINNER: "/winner", // New route for winner page
-  LOSER: "/looser", // New route for loser page
+  WINNER: "/winner", 
+  LOSER: "/looser",
+  CANDIDATEFINAL:'/final-round',
+  MASTERFINAL:'/master-final' 
 };
 
 export { ROUTES };

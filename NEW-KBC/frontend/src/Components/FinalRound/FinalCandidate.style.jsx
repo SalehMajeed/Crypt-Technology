@@ -1,5 +1,23 @@
 import styled from "styled-components";
 
+export const Container = styled.div`
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(180deg, #0000, #020230),
+    url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
+      no-repeat center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  align-items: center;
+  background-color: #000;
+  height: 100vh;
+  width: 100vw;
+  font-family: "Poppins", sans-serif;
+`;
+
 export const Pera = styled.h2`
   width: 20%;
   margin: 10px auto;
@@ -23,70 +41,7 @@ export const Question = styled.p`
   color: white;
 `;
 
-// export const Header = styled.div`
-//   margin-bottom: 32px;
 
-//   h1 {
-//     font-size: 2.5rem;
-//     font-weight: bold;
-//   }
-
-//   p {
-//     font-size: 1.2rem;
-//     color: #ddd;
-//   }
-// `;
-
-// export const Button = styled.button`
-//   background-color: ${({ disabled }) => (disabled ? "#6c757d" : "#28a745")};
-//   color: white;
-//   padding: 12px 24px;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-//   font-size: 1rem;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-
-//   &:hover {
-//     opacity: 0.9;
-//     transform: translateY(-2px);
-//   }
-
-//   &:active {
-//     transform: translateY(0);
-//   }
-
-//   &:disabled {
-//     background-color: #6c757d;
-//   }
-// `;
-
-// export const Footer = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `;
-
-// ======================================
-
-// import styled from "styled-components";
-
-export const Container = styled.div`
-  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-  display: flex;
-  justify-content: center;
-  background: linear-gradient(180deg, #0000, #020230),
-    url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
-      no-repeat center center;
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  width: 75%;
-  align-items: center;
-  background-color: #000;
-  height: 100vh;
-  width: 100vw;
-  font-family: "Poppins", sans-serif;
-`;
 
 export const CardWrapper = styled.div`
   height: 100vh;
