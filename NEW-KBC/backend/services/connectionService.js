@@ -5,48 +5,44 @@ const maxLiveUsers = process.env.LIVE_USER_LIMIT || 5;
 let timer = null;
 let responseTimes = {};
 const questions = [];
+const axios = require("axios");
 
 let initialState = {
   waitForMaster: true,
-  startTime: 30,
+  startTime: null,
   startTimer: false,
   startQuiz: false,
   distributedQuestion: [],
 };
 
-const resetInitialState = () => {
+const resetInitialState = (questions) => {
   initialState = {
     waitForMaster: false,
     startTime: null,
     startTimer: false,
     startQuiz: false,
-    distributedQuestion: [],
+    distributedQuestion: questions,
   };
   timer = null;
   responseTimes = {};
 };
 
-const connectAsMaster = (socket) => {
+const connectAsMaster = async (socket) => {
   let isConnected = true;
   if (masterSocket) {
     console.log("Master already connected");
     isConnected = false;
   }
   console.log("Master connected");
-  const distributedQuestion = [1, 2, 3, 4];
+  const response = await axios("http://localhost:3002/questions");
+  data = response.data;
+  const distributedQuestion = data[0];
   initialState = { ...initialState, waitForMaster: false, distributedQuestion };
-
-  if (!isConnected) {
-    socket.emit("master-connection-failed", {
-      message: "Master already connected",
-      initialState,
-    });
-  } else {
-    socket.emit("master-connected", {
-      message: "Connected as Master",
-      initialState,
-    });
-  }
+  socket.emit("master-connected", {
+    message: "Connected as Master",
+    initialState,
+  });
+  // }
 };
 
 const connectAsCandidate = (socket) => {
@@ -99,10 +95,8 @@ const disconnectLive = (socket) => {
   console.log("Live user disconnected");
 };
 
-const startQuiz = (socket, io, dataQuestions) => {
+const startQuiz = (socket, io) => {
   initialState = { ...initialState, startQuiz: true };
-  initialState.distributedQuestion = [...dataQuestions ];
-  console.log(initialState.distributedQuestion)
   connectedUser.forEach((eachUser) => {
     if (eachUser.role !== "master") {
       io.to(eachUser.id).emit("quiz-started", initialState);
@@ -111,8 +105,8 @@ const startQuiz = (socket, io, dataQuestions) => {
 };
 
 const resetQuiz = (socket, io) => {
-  resetInitialState();
-  io.emit("quiz-started", initialState);
+  resetInitialState(initialState.distributedQuestion);
+  io.emit("quiz-reset", initialState);
 };
 
 const startTimer = (socket, io) => {

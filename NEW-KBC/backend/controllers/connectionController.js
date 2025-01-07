@@ -1,5 +1,4 @@
 const connectionService = require("../services/connectionService");
-const axios = require("axios");
 const handleConnection = (socket, message) => {
   const parsedMessage = JSON.parse(message);
 
@@ -23,16 +22,7 @@ const handleDisconnection = (socket) => {
 };
 
 const handleStartQuiz = async (socket, io) => {
-  let data;
-  try {
-    const response = await axios("http://localhost:8000/questions");
-    data = response.data;
-    connectionService.questions = data;
-  } catch (error) {
-    console.error("Error fetching questions:", error.message);
-  }
-
-  connectionService.startQuiz(socket, io, data);
+  connectionService.startQuiz(socket, io);
 };
 
 const handleResetQuiz = (socket, io) => {
