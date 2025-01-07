@@ -10,13 +10,11 @@ import {
   Header,
 } from "./Live.styles";
 
-import fiftyFiftyImg from "../assets/fifty_fifty.png";
-import audiencePoll from "../assets/audience_poll.png";
-import expertLifeLine from "../assets/ask_the_expert.png";
-
 const Live = () => {
   const { socket, data } = useContext(SocketContext);
   const [timer, setTimer] = useState(30);
+  const intervalRef = useRef(null);
+
 
   useEffect(() => {
     if (socket) {
@@ -67,11 +65,11 @@ const Live = () => {
                         {Object.entries(distributedQuestion.options).map(
                           ([key, value]) => (
                             <Button
-                            key={key}
-                              >
+                              key={key}
+                            >
                               <span>{`${key}) `}</span>
-                                { value}
-                              </Button>
+                              {value}
+                            </Button>
                           )
                         )}
                       </div>
