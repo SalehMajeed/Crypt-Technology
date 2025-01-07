@@ -45,8 +45,6 @@ const Candidate = () => {
     }
   }, [data, socket]);
   
-
-
   const handleSubmit = () => {
     const currentTime = Date.now();
     console.log(data.startTime);

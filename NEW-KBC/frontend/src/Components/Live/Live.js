@@ -25,19 +25,19 @@ const Live = () => {
   }, [socket]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+    if (data && data.startTimer) {
+      intervalRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(intervalRef.current);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+      return () => clearInterval(intervalRef.current);
+    }
+  }, [data, socket]);
   const distributedQuestion = data?.distributedQuestion;
 
   return (
