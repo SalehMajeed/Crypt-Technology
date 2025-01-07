@@ -14,8 +14,7 @@ const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
   const [timer, setTimer] = useState(30);
   const intervalRef = useRef(null);
-
-  console.log(data);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   useEffect(() => {
     if (socket) {
@@ -44,13 +43,13 @@ const Candidate = () => {
       return () => clearInterval(intervalRef.current);
     }
   }, [data, socket]);
-  
+
   const handleSubmit = () => {
     const currentTime = Date.now();
     console.log(data.startTime);
     const responseTime = Math.floor((currentTime - data.startTime));
     clearInterval(intervalRef.current);
-    socket.emit("submit-response", { userId: socket.id, time: responseTime });
+    socket.emit("submit-response", { userId: socket.id, time: responseTime, ans: selectedAnswers });
   };
   const distributedQuestion = data?.distributedQuestion;
 
@@ -82,8 +81,12 @@ const Candidate = () => {
                           {Object.entries(distributedQuestion.options).map(
                             ([key, value]) => (
                               <Button
-                              key={key}
-                              // onClick={() => setSelectedAnswer(key)}
+                                key={key}
+                                onClick={() => {
+                                  setSelectedAnswers(prevState => [...prevState, { id: key, value }])
+                                }
+                                }
+                                disabled={selectedAnswers.some(eachAns => eachAns.id === key)}
                               >
                                 <span>{`${key})`}</span>
                                 {value}
@@ -92,9 +95,13 @@ const Candidate = () => {
                           )}
                         </div>
 
-                        <button className="submit-btn" onClick={handleSubmit}>
+                        <Button
+                          className="submit-btn"
+                          onClick={handleSubmit}
+                          style={{ cursor: selectedAnswers.length < 4 ? "not-allowed" : '' }}
+                          disabled={selectedAnswers.length < 4} >
                           Submit
-                        </button>
+                        </Button>
                       </>
                     ) : (
                       <div>Please wait for the timer to start...</div>

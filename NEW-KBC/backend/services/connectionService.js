@@ -131,9 +131,9 @@ const checkAllResponses = (io) => {
 };
 
 const submitResponse = (data, io) => {
-  const { userId, time } = data;
+  const { userId, time, ans } = data;
   responseTimes[userId] = time;
-  console.log(responseTimes);
+  console.log(responseTimes, userId, ans);
   // io.emit('response-submitted', { userId, time });
   // checkAllResponses(io);
 };
