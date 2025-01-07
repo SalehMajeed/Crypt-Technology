@@ -1,17 +1,13 @@
-const connectionService = require('../services/connectionService');
-
+const connectionService = require("../services/connectionService");
+const axios = require("axios");
 const handleConnection = (socket, message) => {
   const parsedMessage = JSON.parse(message);
 
-  if (parsedMessage.type === 'connect-master') {
+  if (parsedMessage.type === "connect-master") {
     connectionService.connectAsMaster(socket);
-  }
-
-  else if (parsedMessage.type === 'connect-candidate') {
+  } else if (parsedMessage.type === "connect-candidate") {
     connectionService.connectAsCandidate(socket);
-  }
-
-  else if (parsedMessage.type === 'connect-live') {
+  } else if (parsedMessage.type === "connect-live") {
     connectionService.connectAsLive(socket);
   }
 };
@@ -26,9 +22,17 @@ const handleDisconnection = (socket) => {
   }
 };
 
+const handleStartQuiz = async (socket, io) => {
+  let data;
+  try {
+    const response = await axios("http://localhost:8000/questions");
+    data = response.data;
+    connectionService.questions = data;
+  } catch (error) {
+    console.error("Error fetching questions:", error.message);
+  }
 
-const handleStartQuiz = (socket, io) => {
-  connectionService.startQuiz(socket, io);
+  connectionService.startQuiz(socket, io, data);
 };
 
 const handleResetQuiz = (socket, io) => {

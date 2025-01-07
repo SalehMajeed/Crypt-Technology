@@ -6,7 +6,7 @@ import Live from "../Components/Live/Live";
 import Home from "../Components/Home/Home";
 import Winner from "../Components/WinnerPage.jsx";  // Import Winner component
 import Loser from "../Components/LooserPage.jsx";    // Import Loser component
-
+import FinalCandidate from '../Components/FinalRound/FinalCandidate.jsx'
 const AppRoutes = () => {
   return useRoutes([
     {
@@ -38,6 +38,11 @@ const AppRoutes = () => {
       path: ROUTES.LOSER,    // Loser page route
       exact: true,
       element: <Loser />,    // Render Loser component
+    },
+    {
+      path: ROUTES.CANDIDATEFINAL,   
+      exact: true,
+      element: <FinalCandidate />,    
     },
   ]);
 };
