@@ -13,7 +13,7 @@ import {
 const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
   const [timer, setTimer] = useState(30);
-  const [timerId, setTimerId] = useState(null);
+  const intervalRef = useRef(null);
 
   console.log(data);
 
@@ -25,10 +25,11 @@ const Candidate = () => {
 
   useEffect(() => {
     if (data && data.startTimer) {
-      const interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setTimer((prevTime) => {
           if (prevTime <= 1) {
-            clearInterval(interval);
+            clearInterval(intervalRef.current);
+
             const currentTime = Date.now();
             const responseTime = Math.floor(currentTime - data.startTime);
             socket.emit("submit-response", {
@@ -40,8 +41,7 @@ const Candidate = () => {
           return prevTime - 1;
         });
       }, 1000);
-      setTimer(interval);
-      return () => clearInterval(interval);
+      return () => clearInterval(intervalRef.current);
     }
   }, [data, socket]);
   
@@ -51,7 +51,7 @@ const Candidate = () => {
     const currentTime = Date.now();
     console.log(data.startTime);
     const responseTime = Math.floor((currentTime - data.startTime));
-    clearInterval(timerId);
+    clearInterval(intervalRef.current);
     socket.emit("submit-response", { userId: socket.id, time: responseTime });
   };
   const distributedQuestion = data?.distributedQuestion;
