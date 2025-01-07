@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import { Container, Button , Pera, CardWrapper } from "./Master.styles";
 const Master = () => {
-  const { socket, data, questions } = useContext(SocketContext);
+  const { socket, data } = useContext(SocketContext);
 
   console.log(data);
 
