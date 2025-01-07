@@ -5,8 +5,8 @@ const ROUTES = {
   LIVE: "/live",
   WINNER: "/winner", 
   LOSER: "/looser",
-  CANDIDATEFINAL:'/final-round',
-  MASTERFINAL:'/master-final' 
+  FINALECANDIDATE: "/finale-candidate",
+  FINALEHOST:'/finale-master' 
 };
 
 export { ROUTES };

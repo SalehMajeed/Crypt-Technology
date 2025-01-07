@@ -4,9 +4,10 @@ import Master from "../Components/Master/Master";
 import Candidate from "../Components/Candidate/Candidate";
 import Live from "../Components/Live/Live";
 import Home from "../Components/Home/Home";
-import Winner from "../Components/WinnerPage.jsx";  // Import Winner component
-import Loser from "../Components/LooserPage.jsx";    // Import Loser component
-import FinalCandidate from '../Components/FinalRound/FinalCandidate.jsx'
+import Winner from "../Components/WinnerPage.jsx";
+import Loser from "../Components/LooserPage.jsx";  
+import FinaleHost from "../Components/FinaleHost/FinaleHost.js";
+import FinaleCandidate from "../Components/FinaleCandidate/FinaleCandidate.jsx"
 const AppRoutes = () => {
   return useRoutes([
     {
@@ -30,6 +31,21 @@ const AppRoutes = () => {
       element: <Live />,
     },
     {
+      path: ROUTES.FINALEHOST,
+      exact: true,
+      element: <Live />,
+    },
+    {
+      path: ROUTES.FINALECANDIDATE,
+      exact: true,
+      element: <FinaleCandidate />,
+    },
+    {
+      path: ROUTES.FINALEHOST,   
+      exact: true,
+      element: <FinaleHost />,    
+    },
+    {
       path: ROUTES.WINNER,   // Winner page route
       exact: true,
       element: <Winner />,   // Render Winner component
@@ -38,11 +54,6 @@ const AppRoutes = () => {
       path: ROUTES.LOSER,    // Loser page route
       exact: true,
       element: <Loser />,    // Render Loser component
-    },
-    {
-      path: ROUTES.CANDIDATEFINAL,   
-      exact: true,
-      element: <FinalCandidate />,    
     },
   ]);
 };
