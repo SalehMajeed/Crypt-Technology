@@ -85,7 +85,10 @@ function FinaleHost() {
                   {Object.values(data.distributedQuestion[data.questionIndex].options).map((el, index) => (
                     <Button
                       key={index}
-                      className={selectedAnswer === el ? "selected" : ""}
+                      className={
+                        `${data.submittedQuestion === el ? "selected" : ""} 
+                        ${data.showResult && data.distributedQuestion[data.questionIndex]?.correctAnswer === el ? "selected" : ""}`
+                      }
                     >
                       {el}
                     </Button>

@@ -19,16 +19,14 @@ const timerSound = new Audio("path-to-your-15s-sound.mp3");
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
   const [timer, setTimer] = useState(30);
-  const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [winner, setWinner] = useState(null);
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
 
-  if(data && indexRef.current !== data?.questionIndex) {
+  if (data && indexRef.current !== data?.questionIndex) {
     setTimer(30);
     indexRef.current = data.questionIndex
   }
-  
 
   useEffect(() => {
     if (socket) {
@@ -36,26 +34,26 @@ function FinaleHost() {
     }
   }, [socket]);
 
-    useEffect(() => {
-      if (data && data.startTimer && !intervalRef.current) {
-        intervalRef.current = setInterval(() => {
-          setTimer((prevTime) => {
-            if (prevTime <= 1) {
-              clearInterval(intervalRef.current);
-              intervalRef.current = null;
-              setTimer(30);
-              return 0;
-            }
-            return prevTime - 1;
-          });
-        }, 1000);
-      }
-  
-      return () => {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      };
-    }, [data, socket]);
+  useEffect(() => {
+    if (data && data.startTimer && !intervalRef.current) {
+      intervalRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setTimer(30);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [data, socket]);
 
   const handleStartQuiz = () => {
     socket.emit("start-finale-quiz");
@@ -74,10 +72,17 @@ function FinaleHost() {
   }
 
   const handleSubmitClick = (selectedAns) => {
-    socket.emit('submit-finale-response', {
-      userId: socket.id,
-      ans: selectedAns
+    socket.emit('submit-finale-ans', {
+      userAns: selectedAns
     });
+  }
+
+  const handleSubmitResponse = () => {
+    socket.emit('submit-finale-response');
+  }
+
+  const handleNextQuestion = () => {
+    socket.emit("finale-next-question");
   }
 
   const moneyList = [
@@ -108,13 +113,19 @@ function FinaleHost() {
               <Button className="submit-btn" onClick={handleStopTimer}>
                 Stop Timer
               </Button>
+              <Button className="submit-btn" onClick={handleNextQuestion}>
+                Next Question
+              </Button>
+              <Button className="submit-btn" onClick={handleSubmitResponse}>
+                submit ans
+              </Button>
             </div>
             <Header>
               <TimerCircle>
                 <h2>{timer}</h2>
               </TimerCircle>
             </Header>
-            {data && data.distributedQuestion[data.questionIndex]?.question ?  <div className="optionsDiv">
+            {data && data.distributedQuestion[data.questionIndex]?.question ? <div className="optionsDiv">
               <p>{data.distributedQuestion[data.questionIndex].question || "Loading question..."}</p>
               {data.showOptions && data.distributedQuestion[data.questionIndex].options ? (
                 <div className="options">
@@ -122,7 +133,10 @@ function FinaleHost() {
                     <Button
                       key={index}
                       onClick={() => handleSubmitClick(el)}
-                      className={selectedAnswer === el ? "selected" : ""}
+                      className={
+                        `${data.submittedQuestion === el ? "selected" : ""} 
+                        ${data.showResult && data.distributedQuestion[data.questionIndex]?.correctAnswer === el ? "selected" : ""}`
+                      }
                     >
                       {el}
                     </Button>
