@@ -90,9 +90,9 @@ const Candidate = () => {
                     ""
                   )}
                   {data.finalResults ? <div>
-                    <ul>
+                    <ul className="outerUl">
                       {data.finalResults.map((eachResult, index) => <li key={index}>{
-                        <ul color={eachResult.isWinner ? 'green' : 'red'}>
+                        <ul color={eachResult.isWinner ? 'green' : 'red'} className="userInfo">
                           <li>{eachResult.userId}</li>
                           <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
                         </ul>

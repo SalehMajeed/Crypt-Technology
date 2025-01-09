@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import useSound from "use-sound";
 import playSound from "../assets/play.mp3";
+import { clockSound } from "../assets/Clock_Tick_Tock.mp3";
 import {
   Container,
   Pera,
@@ -82,11 +83,11 @@ const Live = () => {
                   ""
                 )}
                 {data.finalResults ? (
-                  <div>
-                    <ul>
+                  <div  className="winnersSortList">
+                    <ul className='outerUl'>
                       {data.finalResults.map((eachResult, index) => (
                         <li key={index}>
-                          <ul color={eachResult.isWinner ? "green" : "red"}>
+                          <ul color={eachResult.isWinner ? "green" : "red"} className="userInfo">
                             <li>{eachResult.userId}</li>
                             <li>
                               {(eachResult.time / 1000).toFixed(3)} Seconds

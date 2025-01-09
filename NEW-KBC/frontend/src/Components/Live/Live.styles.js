@@ -1,138 +1,15 @@
 import styled from "styled-components";
 
-// export const Container = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   background: url(https://www.spiretech.in/assets/images/banner2.png)
-//     center/cover;
-//   height: 100vh;
-//   width: 100vw;
-// `;
-
-// export const CardWrapper = styled.div`
-//   ${
-//     "" /* width: 800px;
-//   max-width: 90%;
-//   padding: 32px;
-//   border-radius: 12px;
-//   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-//   border: 0.7px solid rgba(255, 255, 255, 0.3);
-//   color: white;
-//   text-align: center; */
-//   }
-
-//   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-//   display: flex;
-//   justify-content: center;
-//   background: linear-gradient(180deg, #0000, #020230),
-//     url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
-//       no-repeat center center;
-//   background-size: cover;
-//   display: flex;
-//   flex-direction: column;
-//   width: 75%;
-//   align-items: center;
-//   background-color: #000;
-//   height: 100vh;
-//   width: 100vw;
-//   font-family: "Poppins", sans-serif;
-
-//   .elementsDiv {
-//     display: grid;
-//     grid-template-columns: 1fr 300px;
-//     height: 100vh;
-//   }
-
-//   .sideBar {
-//     background: #020230;
-//     align-items: center;
-//     text-align: center;
-//   }
-
-//   li {
-//     display: flex;
-//     border-bottom: 1px solid #ffa800;
-//     justify-content: space-between;
-//     background: #020230;
-//     padding: 8px;
-//     color: white;
-//     text-align: center;
-//     font-size: 1.7rem;
-//     font-weight: 400;
-//     margin: 10px;
-//   }
-// `;
 
 export const Pera = styled.h2`
   align-items: center;
   text-align: center;
   color: white;
   font-size: 2.5rem;
-  ${"" /* border-bottom: 2px solid; */}
   padding: 10px;
   margin: 0 auto;
 `;
 
-// export const Question = styled.p`
-//   background: linear-gradient(#100241, #000);
-//   border: 1px solid #ffa800;
-//   border-radius: 35px;
-//   font-size: 15px;
-//   padding: 20px;
-//   text-align: center;
-//   width: 80%;
-//   margin: 0 auto;
-//   font-size: 1.8rem;
-//   color: white;
-// `;
-
-// export const Header = styled.div`
-//   margin-bottom: 32px;
-
-//   h1 {
-//     font-size: 2.5rem;
-//     font-weight: bold;
-//   }
-
-//   p {
-//     font-size: 1.2rem;
-//     color: #ddd;
-//   }
-// `;
-
-// export const Button = styled.button`
-//   background-color: ${({ disabled }) => (disabled ? "#6c757d" : "#28a745")};
-//   color: white;
-//   padding: 12px 24px;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-//   font-size: 1rem;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-
-//   &:hover {
-//     opacity: 0.9;
-//     transform: translateY(-2px);
-//   }
-
-//   &:active {
-//     transform: translateY(0);
-//   }
-
-//   &:disabled {
-//     background-color: #6c757d;
-//   }
-// `;
-
-// export const Footer = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `;
-
-// ======================================
-
-// import styled from "styled-components";
 export const Logo = styled.div``;
 
 export const Container = styled.div`
@@ -174,6 +51,18 @@ export const CardWrapper = styled.div`
   color: white;
   text-align: center;
   font-size: 1.8rem;
+
+  .userInfo{
+    display:flex;
+  }
+
+
+  .outerUl{
+    width:100%;
+    display:grid;
+    justify-content:center;
+    align-items:center
+  }
 
   .options {
     display: grid;

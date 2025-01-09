@@ -49,6 +49,18 @@ export const CardWrapper = styled.div`
   text-align: center;
   font-size: 1.8rem;
 
+  .userInfo{
+    display:flex;
+  }
+
+
+  .outerUl{
+    width:100%;
+    display:grid;
+    justify-content:center;
+    align-items:center
+  }
+  
   .options {
     display: grid;
     place-items: center;
