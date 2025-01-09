@@ -7,7 +7,6 @@ export const Pera = styled.h2`
   text-align: center;
   color: white;
   font-size: 2rem;
-  border-bottom: 2px solid #ffa800;
 `;
 
 export const Question = styled.p`
@@ -22,53 +21,6 @@ export const Question = styled.p`
   font-size: 1.8rem;
   color: white;
 `;
-
-// export const Header = styled.div`
-//   margin-bottom: 32px;
-
-//   h1 {
-//     font-size: 2.5rem;
-//     font-weight: bold;
-//   }
-
-//   p {
-//     font-size: 1.2rem;
-//     color: #ddd;
-//   }
-// `;
-
-// export const Button = styled.button`
-//   background-color: ${({ disabled }) => (disabled ? "#6c757d" : "#28a745")};
-//   color: white;
-//   padding: 12px 24px;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-//   font-size: 1rem;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-
-//   &:hover {
-//     opacity: 0.9;
-//     transform: translateY(-2px);
-//   }
-
-//   &:active {
-//     transform: translateY(0);
-//   }
-
-//   &:disabled {
-//     background-color: #6c757d;
-//   }
-// `;
-
-// export const Footer = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `;
-
-// ======================================
-
-// import styled from "styled-components";
 
 export const Container = styled.div`
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
@@ -102,11 +54,9 @@ export const CardWrapper = styled.div`
     place-items: center;
     grid-template-columns: 1fr 1fr;
     margin: 30px auto;
-    ${"" /* padding: 10px; */}
     text-align: center;
     justify-content: center;
     width: 100%;
-    ${'' /* grid-gap: 20px; */}
   }
 
   .submitBtnDiv {
@@ -133,19 +83,11 @@ export const CardWrapper = styled.div`
   }
 
   .elementsDiv {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    height: 100vh;
-  }
-  .quizElements {
     margin-top: 50px;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, #0000, #020230),
-      url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
-        no-repeat center center;
-    background-size: cover;
   }
+
   .sideBar {
     background: #020230;
     align-items: center;
@@ -227,19 +169,17 @@ export const CardWrapper = styled.div`
 
 export const Button = styled.button`
   display: flex;
-  ${"" /* grid-gap:10px; */}
   justify-content:space-around;
   background: linear-gradient(#100241, #000);
   border: 2px solid #ffa800;
   border-radius: 35px;
   color: white;
-  ${"" /* font-weight: 400; */}
   font-weight: 300;
   padding: 10px;
   margin: 10px;
   text-align: center;
   width: 90%;
-  min-width:max-content;
+  min-width: max-content;
   cursor: pointer;
   transition: all 0.3s ease;
 

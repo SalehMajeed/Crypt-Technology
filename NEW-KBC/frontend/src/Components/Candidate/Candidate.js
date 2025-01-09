@@ -74,7 +74,7 @@ const Candidate = () => {
       <CardWrapper>
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
-            <div className="quizElements">
+            {/* <div className="quizElements"> */}
               <Pera>Candidate</Pera>
               {data.waitForMaster ? (
                 <Pera>Waiting for the Master...</Pera>
@@ -129,7 +129,7 @@ const Candidate = () => {
 
                 </div>
               )}
-            </div>
+            {/* </div> */}
           </div>
         ) : (
           <Pera>Loading...</Pera>

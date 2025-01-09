@@ -13,7 +13,10 @@ export const Container = styled.div`
   width: 100vw;
 `;
 
+
 export const Pera = styled.p`
+display:flex;
+justify-content:center;
 font-size: ${props => props.size ? props.size : 1.5}rem;
     color: rgba(255, 255, 255, 0.6);
 `;
@@ -46,10 +49,3 @@ export const Button = styled.button`
     background-color: #6c757d;
   }
 `;
-
-// export const InnerContainer = styled.div`
-// display:flex;
-// gap:15px;
-// align-item:center;
-// flex-direction: ${props => props.dira ? props.dira : 'row'}
-// `
