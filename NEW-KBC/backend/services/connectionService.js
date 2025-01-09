@@ -30,6 +30,8 @@ let initialFinaleState = {
   distributedQuestion: [],
   finalResults: null,
   questionIndex: 0,
+  submittedQuestion: null,
+  showResult: false,
 }
 
 const resetInitialState = (questions) => {
@@ -56,6 +58,8 @@ const resetFinaleInitialState = () => {
     finalResults: null,
     showOptions: false,
     questionIndex: 0,
+    submittedQuestion: null,
+    showResult: false,
   }
 };
 
@@ -267,17 +271,32 @@ const finaleStopTimer = (socket, io) => {
   io.emit("finale-timer-stop", initialFinaleState);
 };
 
+const finaleSubmitAns = (ans, io) => {
+  initialFinaleState = { 
+    ...initialFinaleState,
+     submittedQuestion: ans,
+     startTimer: false,
+     };
+  io.emit("finale-submitted-ans", initialFinaleState);
+};
+
 const finaleSubmitResponse = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, showResult: true }
+  io.emit("finale-submit-question", initialFinaleState);
+}
+
+const finaleNextQuestion = (socket, io) => {
   initialFinaleState = {
     ...initialFinaleState,
     questionIndex: initialFinaleState.questionIndex + 1,
     startQuiz: false,
     startTimer: false,
     showOptions: false,
+    showResult: false,
+    submittedQuestion: null,
   };
-  io.emit("finale-quiz-submit", initialFinaleState);
+  io.emit("finale-next-question", initialFinaleState);
 };
-
 
 module.exports = {
   connectAsMaster,
@@ -299,5 +318,7 @@ module.exports = {
   finaleResetQuiz,
   finaleStartTimer,
   finaleStopTimer,
+  finaleSubmitAns,
   finaleSubmitResponse,
+  finaleNextQuestion,
 };

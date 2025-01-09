@@ -61,8 +61,17 @@ const handleFinaleStopTimer = (socket, io) => {
   connectionService.finaleStopTimer(socket, io);
 };
 
-const handleFinaleSubmitResponse = (data, io) => {
-  connectionService.finaleSubmitResponse(data, io);
+const handleFinaleNextAns = () => {
+  connectionService.finaleNextQuestion(socket, io);
+};
+
+const handleSubmitFinaleAns = (data, io) => {
+  const {userAns} = data;
+  connectionService.finaleSubmitAns(userAns, io);
+};
+
+const handleFinaleSubmitResponse = (socket, io) => {
+  connectionService.finaleSubmitResponse(socket, io);
 };
 
 
@@ -79,5 +88,7 @@ module.exports = {
   handleFinaleResetQuiz,
   handleFinaleStartTimer,
   handleFinaleStopTimer,
+  handleSubmitFinaleAns,
   handleFinaleSubmitResponse,
+  handleFinaleNextAns,
 };
