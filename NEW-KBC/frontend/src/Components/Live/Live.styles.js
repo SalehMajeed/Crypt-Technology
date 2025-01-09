@@ -69,7 +69,7 @@ export const Pera = styled.h2`
   text-align: center;
   color: white;
   font-size: 2.5rem;
-  border-bottom: 2px solid;
+  ${"" /* border-bottom: 2px solid; */}
   padding: 10px;
   margin: 0 auto;
 `;
@@ -133,13 +133,14 @@ export const Pera = styled.h2`
 // ======================================
 
 // import styled from "styled-components";
+export const Logo = styled.div``;
 
 export const Container = styled.div`
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
   display: flex;
   justify-content: center;
   background: linear-gradient(180deg, #0000, #020230),
-    url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
+    url("https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg")
       no-repeat center center;
   background-size: cover;
   display: flex;
@@ -208,19 +209,11 @@ export const CardWrapper = styled.div`
   }
 
   .elementsDiv {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    height: 100vh;
-  }
-  .quizElements {
     margin-top: 50px;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, #0000, #020230),
-      url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
-        no-repeat center center;
-    background-size: cover;
   }
+
   .sideBar {
     background: #020230;
     align-items: center;
@@ -300,9 +293,8 @@ export const CardWrapper = styled.div`
 `;
 
 export const Button = styled.button`
-
-display:flex;
-justify-content:space-around;
+  display: flex;
+  justify-content: space-around;
   background: linear-gradient(#100241, #000);
   border: 2px solid #ffa800;
   border-radius: 35px;

@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
+import useSound from "use-sound";
+import playSound from "../assets/play.mp3";
 import {
   Container,
   Pera,
   Question,
+  Logo,
   CardWrapper,
   TimerCircle,
   Header,
@@ -15,6 +18,7 @@ const Live = () => {
   const [timer, setTimer] = useState(30);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [play, { stop }] = useSound(playSound);
 
   useEffect(() => {
     if (socket) {
@@ -42,7 +46,19 @@ const Live = () => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [data, socket]);
+  }, [data]);
+
+  useEffect(() => {
+    if (data?.startQuiz) {
+      play();
+      const soundTimer = setTimeout(() => {
+        stop();
+      }, 3000);
+      return () => {
+        clearTimeout(soundTimer);
+      };
+    }
+  }, [data?.startQuiz, play, stop]);
 
   const distributedQuestion = data?.distributedQuestion;
 
@@ -51,31 +67,37 @@ const Live = () => {
       <CardWrapper>
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
-            <div className="quizElements">
-              <Pera>Live</Pera>
-              {data.waitForMaster ? (
-                <Pera>Waiting for the Master...</Pera>
-              ) : (
-                <div className="optionsDiv">
-                  {data.startTimer ? (
-                    <Header>
-                      <TimerCircle>
-                        <h2>{timer}</h2>
-                      </TimerCircle>
-                    </Header>
-                  ) : (
-                    ""
-                  )}
-                  {data.finalResults ? <div>
+            <Pera>Live</Pera>
+            {data.waitForMaster ? (
+              <Pera>Waiting for the Master...</Pera>
+            ) : (
+              <div className="optionsDiv">
+                {data.startTimer ? (
+                  <Header>
+                    <TimerCircle>
+                      <h2>{timer}</h2>
+                    </TimerCircle>
+                  </Header>
+                ) : (
+                  ""
+                )}
+                {data.finalResults ? (
+                  <div>
                     <ul>
-                      {data.finalResults.map((eachResult, index) => <li key={index}>{
-                        <ul color={eachResult.isWinner ? 'green' : 'red'}>
-                          <li>{eachResult.userId}</li>
-                          <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
-                        </ul>
-                      }</li>)}
+                      {data.finalResults.map((eachResult, index) => (
+                        <li key={index}>
+                          <ul color={eachResult.isWinner ? "green" : "red"}>
+                            <li>{eachResult.userId}</li>
+                            <li>
+                              {(eachResult.time / 1000).toFixed(3)} Seconds
+                            </li>
+                          </ul>
+                        </li>
+                      ))}
                     </ul>
-                  </div> : <div>
+                  </div>
+                ) : (
+                  <div>
                     <Question>{distributedQuestion.question}</Question>
                     <div>
                       {data.startTimer ? (
@@ -83,9 +105,7 @@ const Live = () => {
                           <div className="options">
                             {Object.entries(distributedQuestion.options).map(
                               ([key, value]) => (
-                                <Button
-                                  key={key}
-                                >
+                                <Button key={key}>
                                   <span>{`${key})`}</span>
                                   {value}
                                 </Button>
@@ -97,14 +117,13 @@ const Live = () => {
                         <div>Please wait for the timer to start...</div>
                       )}
                     </div>
-                  </div>}
-
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : (
-          <Pera>Loading...</Pera>
+          <Pera>Loading..</Pera>
         )}
       </CardWrapper>
     </Container>
@@ -112,7 +131,3 @@ const Live = () => {
 };
 
 export default Live;
-
-// first 4 45sec
-// after 4 90sec
-// first 4 45sec
