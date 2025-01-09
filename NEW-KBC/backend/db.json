@@ -1,0 +1,81 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "question": "Who is known as the Father of the Indian Constitution?",
+      "options": {
+        "a": "Mahatma Gandhi",
+        "b": "Jawaharlal Nehru",
+        "c": "B. R. Ambedkar",
+        "d": "Sardar Patel"
+      },
+      "correctAnswer": "c"
+    },
+    {
+      "id": "2",
+      "question": "What is the capital of France?",
+      "options": {
+        "a": "Berlin",
+        "b": "Madrid",
+        "c": "Rome",
+        "d": "Paris"
+      },
+      "correctAnswer": "d"
+    },
+    {
+      "id": "3",
+      "question": "Which planet is known as the Red Planet?",
+      "options": {
+        "a": "Venus",
+        "b": "Mars",
+        "c": "Jupiter",
+        "d": "Saturn"
+      },
+      "correctAnswer": "b"
+    },
+    {
+      "id": "4",
+      "question": "What is the chemical symbol for water?",
+      "options": {
+        "a": "O2",
+        "b": "H2O",
+        "c": "CO2",
+        "d": "NaCl"
+      },
+      "correctAnswer": "b"
+    },
+    {
+      "id": "5",
+      "question": "Who wrote the play 'Romeo and Juliet'?",
+      "options": {
+        "a": "Charles Dickens",
+        "b": "Mark Twain",
+        "c": "William Shakespeare",
+        "d": "Leo Tolstoy"
+      },
+      "correctAnswer": "c"
+    },
+    {
+      "id": "6",
+      "question": "What is the largest mammal in the world?",
+      "options": {
+        "a": "African Elephant",
+        "b": "Blue Whale",
+        "c": "Giraffe",
+        "d": "Polar Bear"
+      },
+      "correctAnswer": "b"
+    },
+    {
+      "id": "7",
+      "question": "Which is the smallest prime number?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "5"
+      },
+      "correctAnswer": "b"
+    }
+  ]
+}
