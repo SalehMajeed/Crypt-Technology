@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { io } from "socket.io-client";
 // import useSound from "use-sound";
 import { useNavigate } from "react-router-dom";
@@ -18,16 +18,44 @@ const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
-  console.log(data);
   const [timer, setTimer] = useState(30);
   const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [winner, setWinner] = useState(null);
+  const intervalRef = useRef(null);
+  const indexRef = useRef(null);
+
+  if(data && indexRef.current !== data?.questionIndex) {
+    setTimer(30);
+    indexRef.current = data.questionIndex
+  }
+  
 
   useEffect(() => {
     if (socket) {
       socket.emit("connect-finale-master");
     }
   }, [socket]);
+
+    useEffect(() => {
+      if (data && data.startTimer && !intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          setTimer((prevTime) => {
+            if (prevTime <= 1) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+              setTimer(30);
+              return 0;
+            }
+            return prevTime - 1;
+          });
+        }, 1000);
+      }
+  
+      return () => {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      };
+    }, [data, socket]);
 
   const handleStartQuiz = () => {
     socket.emit("start-finale-quiz");

@@ -26,6 +26,7 @@ let initialFinaleState = {
   startTime: null,
   startTimer: false,
   startQuiz: false,
+  showOptions: false,
   distributedQuestion: [],
   finalResults: null,
   questionIndex: 0,
@@ -37,6 +38,7 @@ const resetInitialState = (questions) => {
     startTime: null,
     startTimer: false,
     startQuiz: false,
+    showOptions: false,
     distributedQuestion: questions,
     finalResults: null
   };
@@ -52,6 +54,7 @@ const resetFinaleInitialState = () => {
     startTimer: false,
     startQuiz: false,
     finalResults: null,
+    showOptions: false,
     questionIndex: 0,
   }
 };
@@ -255,12 +258,12 @@ const finaleResetQuiz = (socket, io) => {
 };
 
 const finaleStartTimer = (socket, io) => {
-  initialFinaleState = { ...initialFinaleState, startTimer: true };
+  initialFinaleState = { ...initialFinaleState, startTimer: true, showOptions:true };
   io.emit("finale-timer-started", initialFinaleState);
 };
 
 const finaleStopTimer = (socket, io) => {
-  initialFinaleState = { ...initialFinaleState, startTimer: false };
+  initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions:true, };
   io.emit("finale-timer-stop", initialFinaleState);
 };
 

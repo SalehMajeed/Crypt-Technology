@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { io } from "socket.io-client";
 // import useSound from "use-sound";
 import { useNavigate } from "react-router-dom";
@@ -12,23 +12,51 @@ import {
   TimerCircle,
   Button,
   Footer,
-} from "./FinaleCandidate.style.jsx";
+} from "../FinaleCandidate/FinaleCandidate.style.jsx";
 import SocketContext from "../../contexts/SocketContext.js";
 const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
-function FinaleCandidate() {
+function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
 
   const [timer, setTimer] = useState(30);
-  const [questions, setQuestions] = useState({});
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [winner, setWinner] = useState(null);
+  const intervalRef = useRef(null);
+  const indexRef = useRef(null);
+
+
+  if (data && indexRef.current !== data?.questionIndex) {
+    setTimer(30);
+    indexRef.current = data.questionIndex
+  }
 
   useEffect(() => {
     if (socket) {
       socket.emit("connect-finale-candidate");
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (data && data.startTimer && !intervalRef.current) {
+      intervalRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setTimer(30);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [data, socket]);
 
   const moneyList = [
     { id: "1)", amount: "Rs. 500" },
@@ -50,14 +78,13 @@ function FinaleCandidate() {
                 <h2>{timer}</h2>
               </TimerCircle>
             </Header>
-            <div className="optionsDiv">
-              <p>{questions.question || "Loading question..."}</p>
-              {questions.options ? (
+            {data && data.distributedQuestion[data.questionIndex]?.question ? <div className="optionsDiv">
+              <p>{data.startQuiz ?  data.distributedQuestion[data.questionIndex].question : "Loading question..."}</p>
+              {data.showOptions && data.distributedQuestion[data.questionIndex].options ? (
                 <div className="options">
-                  {Object.values(questions.options).map((el, index) => (
+                  {Object.values(data.distributedQuestion[data.questionIndex].options).map((el, index) => (
                     <Button
                       key={index}
-                      onClick={() => setSelectedAnswer(el)}
                       className={selectedAnswer === el ? "selected" : ""}
                     >
                       {el}
@@ -65,9 +92,10 @@ function FinaleCandidate() {
                   ))}
                 </div>
               ) : (
-                <p>No options available</p>
+                <p>Waiting for timer</p>
               )}
-            </div>
+            </div> : <div>Loading</div>}
+
           </div>
           <div className="sideBar">
             <div className="lifeLine">
@@ -85,14 +113,14 @@ function FinaleCandidate() {
                 />
               </span>
             </div>
-            {moneyList.map((el) => {
+            {moneyList.map((el, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <li>
                     <span className="indexOfPrice">{el.id}</span>
                     <span className="price">{el.amount}</span>
                   </li>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
@@ -103,4 +131,4 @@ function FinaleCandidate() {
   );
 }
 
-export default FinaleCandidate;
+export default FinaleHost;
