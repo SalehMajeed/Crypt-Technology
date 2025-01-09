@@ -23,11 +23,12 @@ const Candidate = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (data && data.startTimer) {
+    if (data && data.startTimer && !intervalRef.current) {
       intervalRef.current = setInterval(() => {
         setTimer((prevTime) => {
           if (prevTime <= 1) {
             clearInterval(intervalRef.current);
+            intervalRef.current = null;
 
             const currentTime = Date.now();
             const responseTime = Math.floor(currentTime - data.startTime);
@@ -35,22 +36,37 @@ const Candidate = () => {
               userId: socket.id,
               time: responseTime,
             });
+            setTimer(30);
+            setSelectedAnswers([]);
             return 0;
           }
           return prevTime - 1;
         });
       }, 1000);
-      return () => clearInterval(intervalRef.current);
     }
+
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
   }, [data, socket]);
 
   const handleSubmit = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
     const currentTime = Date.now();
     console.log(data.startTime);
     const responseTime = Math.floor((currentTime - data.startTime));
-    clearInterval(intervalRef.current);
     socket.emit("submit-response", { userId: socket.id, time: responseTime, ans: selectedAnswers });
+    setTimer(30);
+    setSelectedAnswers([]);
   };
+
+  useEffect(() => {
+    if (selectedAnswers.length >= 4) {
+      handleSubmit()
+    }
+  }, [selectedAnswers])
   const distributedQuestion = data?.distributedQuestion;
 
   return (
@@ -73,40 +89,35 @@ const Candidate = () => {
                   ) : (
                     ""
                   )}
-                  <Question>{distributedQuestion.question}</Question>
-                  <div>
-                    {data.startTimer ? (
-                      <>
-                        <div className="options">
-                          {Object.entries(distributedQuestion.options).map(
-                            ([key, value]) => (
-                              <Button
-                                key={key}
-                                onClick={() => {
-                                  setSelectedAnswers(prevState => [...prevState, { id: key, value }])
-                                }
-                                }
-                                disabled={selectedAnswers.some(eachAns => eachAns.id === key)}
-                              >
-                                <span>{`${key})`}</span>
-                                {value}
-                              </Button>
-                            )
-                          )}
-                        </div>
+                  {data.finalResults ? <div>yes</div> : <div>
+                    <Question>{distributedQuestion.question}</Question>
+                    <div>
+                      {data.startTimer ? (
+                        <>
+                          <div className="options">
+                            {Object.entries(distributedQuestion.options).map(
+                              ([key, value]) => (
+                                <Button
+                                  key={key}
+                                  onClick={() => {
+                                    setSelectedAnswers(prevState => [...prevState, { id: key, value }]);
+                                  }
+                                  }
+                                  disabled={selectedAnswers.some(eachAns => eachAns.id === key)}
+                                >
+                                  <span>{`${key})`}</span>
+                                  {value}
+                                </Button>
+                              )
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div>Please wait for the timer to start...</div>
+                      )}
+                    </div>
+                  </div>}
 
-                        <Button
-                          className="submit-btn"
-                          onClick={handleSubmit}
-                          style={{ cursor: selectedAnswers.length < 4 ? "not-allowed" : '' }}
-                          disabled={selectedAnswers.length < 4} >
-                          Submit
-                        </Button>
-                      </>
-                    ) : (
-                      <div>Please wait for the timer to start...</div>
-                    )}
-                  </div>
                 </div>
               )}
             </div>
@@ -120,3 +131,7 @@ const Candidate = () => {
 };
 
 export default Candidate;
+
+// first 4 45sec
+// after 4 90sec
+// first 4 45sec
