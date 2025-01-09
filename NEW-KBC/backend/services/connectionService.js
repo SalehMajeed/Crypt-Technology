@@ -1,11 +1,14 @@
+
 let masterSocket = null;
 let connectedUser = [];
+
 const maxCandidates = process.env.USER_LIMIT || 5;
 const maxLiveUsers = process.env.LIVE_USER_LIMIT || 5;
-let timer = null;
-let responseTimes = {};
 const questions = [];
 const axios = require("axios");
+
+let timer = null;
+let responseTimes = [];
 
 let initialState = {
   waitForMaster: true,
@@ -13,6 +16,7 @@ let initialState = {
   startTimer: false,
   startQuiz: false,
   distributedQuestion: [],
+  finalResults: null
 };
 
 const resetInitialState = (questions) => {
@@ -22,9 +26,10 @@ const resetInitialState = (questions) => {
     startTimer: false,
     startQuiz: false,
     distributedQuestion: questions,
+    finalResults: null
   };
   timer = null;
-  responseTimes = {};
+  responseTimes = [];
 };
 
 const connectAsMaster = async (socket) => {
@@ -120,22 +125,53 @@ const startTimer = (socket, io) => {
 };
 
 const stopTimer = (socket, io) => {
-  if (socket === connectionService.masterSocket && timer) {
+  if (socket === masterSocket && timer) {
     clearInterval(timer);
     io.emit("time-stopped", { message: "Time has stopped!" });
   }
 };
 
-const checkAllResponses = (io) => {
-  io.emit("all-responses", { responseTimes });
-};
+const checkForWinner = (arr) => {
+  let currentIndex = -1;
+  let min = +Infinity;
+  for (let i = 0; i <= arr.length - 1; i++) {
+    if (arr[i].correctAns && min > arr[i].time) {
+      min = arr[i].time;
+      currentIndex = i;
+    }
+  }
+  return currentIndex
+}
 
 const submitResponse = (data, io) => {
-  const { userId, time, ans } = data;
-  responseTimes[userId] = time;
-  console.log(responseTimes, userId, ans);
-  // io.emit('response-submitted', { userId, time });
-  // checkAllResponses(io);
+  const { userId, time, ans = [] } = data;
+  const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
+  // const rightAns = initialState.distributedQuestion.correctAnswer;
+  const rightAns = 'Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel';
+  // "Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel"
+  const finalResponse = {
+    userId,
+    time,
+    ans: finalAns,
+    correctAns: rightAns.trim() === finalAns,
+    isWinner: false,
+  };
+  responseTimes = [...responseTimes, finalResponse];
+  if (responseTimes.length >= process.env.USER_LIMIT) {
+    const getWinner = checkForWinner(responseTimes);
+    if (getWinner !== -1) {
+      responseTimes[getWinner].isWinner = true;
+    }
+    const finalResults = responseTimes;
+    const startTime = null;
+    const startTimer = false;
+    initialState = { ...initialState, startTime, startTimer, finalResults }
+    connectedUser.forEach((eachUser) => {
+      if (eachUser.role !== "master") {
+        io.to(eachUser.id).emit("quiz-ended", initialState);
+      }
+    });
+  }
 };
 
 const isCandidate = (socket) => {
