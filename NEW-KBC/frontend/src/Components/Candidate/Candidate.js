@@ -89,7 +89,16 @@ const Candidate = () => {
                   ) : (
                     ""
                   )}
-                  {data.finalResults ? <div>yes</div> : <div>
+                  {data.finalResults ? <div>
+                    <ul>
+                      {data.finalResults.map((eachResult, index) => <li key={index}>{
+                        <ul color={eachResult.isWinner ? 'green' : 'red'}>
+                          <li>{eachResult.userId}</li>
+                          <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
+                        </ul>
+                      }</li>)}
+                    </ul>
+                  </div> : <div>
                     <Question>{distributedQuestion.question}</Question>
                     <div>
                       {data.startTimer ? (
