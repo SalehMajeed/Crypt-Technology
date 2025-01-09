@@ -1,52 +1,53 @@
+
 let masterSocket = null;
 let connectedUser = [];
+
 const maxCandidates = process.env.USER_LIMIT || 5;
 const maxLiveUsers = process.env.LIVE_USER_LIMIT || 5;
-let timer = null;
-let responseTimes = {};
 const questions = [];
+const axios = require("axios");
+
+let timer = null;
+let responseTimes = [];
 
 let initialState = {
   waitForMaster: true,
-  startTime: 30,
+  startTime: null,
   startTimer: false,
   startQuiz: false,
   distributedQuestion: [],
+  finalResults: null
 };
 
-const resetInitialState = () => {
+const resetInitialState = (questions) => {
   initialState = {
     waitForMaster: false,
     startTime: null,
     startTimer: false,
     startQuiz: false,
-    distributedQuestion: [],
+    distributedQuestion: questions,
+    finalResults: null
   };
   timer = null;
-  responseTimes = {};
+  responseTimes = [];
 };
 
-const connectAsMaster = (socket) => {
+const connectAsMaster = async (socket) => {
   let isConnected = true;
   if (masterSocket) {
     console.log("Master already connected");
     isConnected = false;
   }
   console.log("Master connected");
-  const distributedQuestion = [1, 2, 3, 4];
+  const response = await axios("http://localhost:3002/questions");
+  data = response.data;
+  const distributedQuestion = data[0];
   initialState = { ...initialState, waitForMaster: false, distributedQuestion };
-
-  if (!isConnected) {
-    socket.emit("master-connection-failed", {
-      message: "Master already connected",
-      initialState,
-    });
-  } else {
-    socket.emit("master-connected", {
-      message: "Connected as Master",
-      initialState,
-    });
-  }
+  socket.emit("master-connected", {
+    message: "Connected as Master",
+    initialState,
+  });
+  // }
 };
 
 const connectAsCandidate = (socket) => {
@@ -99,10 +100,8 @@ const disconnectLive = (socket) => {
   console.log("Live user disconnected");
 };
 
-const startQuiz = (socket, io, dataQuestions) => {
+const startQuiz = (socket, io) => {
   initialState = { ...initialState, startQuiz: true };
-  initialState.distributedQuestion = [...dataQuestions ];
-  console.log(initialState.distributedQuestion)
   connectedUser.forEach((eachUser) => {
     if (eachUser.role !== "master") {
       io.to(eachUser.id).emit("quiz-started", initialState);
@@ -111,8 +110,8 @@ const startQuiz = (socket, io, dataQuestions) => {
 };
 
 const resetQuiz = (socket, io) => {
-  resetInitialState();
-  io.emit("quiz-started", initialState);
+  resetInitialState(initialState.distributedQuestion);
+  io.emit("quiz-reset", initialState);
 };
 
 const startTimer = (socket, io) => {
@@ -126,22 +125,53 @@ const startTimer = (socket, io) => {
 };
 
 const stopTimer = (socket, io) => {
-  if (socket === connectionService.masterSocket && timer) {
+  if (socket === masterSocket && timer) {
     clearInterval(timer);
     io.emit("time-stopped", { message: "Time has stopped!" });
   }
 };
 
-const checkAllResponses = (io) => {
-  io.emit("all-responses", { responseTimes });
-};
+const checkForWinner = (arr) => {
+  let currentIndex = -1;
+  let min = +Infinity;
+  for (let i = 0; i <= arr.length - 1; i++) {
+    if (arr[i].correctAns && min > arr[i].time) {
+      min = arr[i].time;
+      currentIndex = i;
+    }
+  }
+  return currentIndex
+}
 
 const submitResponse = (data, io) => {
-  const { userId, time } = data;
-  responseTimes[userId] = time;
-  console.log(responseTimes);
-  // io.emit('response-submitted', { userId, time });
-  // checkAllResponses(io);
+  const { userId, time, ans = [] } = data;
+  const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
+  // const rightAns = initialState.distributedQuestion.correctAnswer;
+  const rightAns = 'Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel';
+  // "Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel"
+  const finalResponse = {
+    userId,
+    time,
+    ans: finalAns,
+    correctAns: rightAns.trim() === finalAns,
+    isWinner: false,
+  };
+  responseTimes = [...responseTimes, finalResponse];
+  if (responseTimes.length >= process.env.USER_LIMIT) {
+    const getWinner = checkForWinner(responseTimes);
+    if (getWinner !== -1) {
+      responseTimes[getWinner].isWinner = true;
+    }
+    const finalResults = responseTimes;
+    const startTime = null;
+    const startTimer = false;
+    initialState = { ...initialState, startTime, startTimer, finalResults }
+    connectedUser.forEach((eachUser) => {
+      if (eachUser.role !== "master") {
+        io.to(eachUser.id).emit("quiz-ended", initialState);
+      }
+    });
+  }
 };
 
 const isCandidate = (socket) => {

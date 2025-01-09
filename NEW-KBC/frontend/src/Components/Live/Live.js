@@ -1,43 +1,20 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import {
   Container,
   Pera,
   Question,
   CardWrapper,
-  Button,
   TimerCircle,
   Header,
-} from "./Live.styles";
-
-import fiftyFiftyImg from "../assets/fifty_fifty.png";
-import audiencePoll from "../assets/audience_poll.png";
-import expertLifeLine from "../assets/ask_the_expert.png";
+  Button,
+} from "./Live.styles.js";
 
 const Live = () => {
-  const [timer, setTimer] = useState(30);
   const { socket, data } = useContext(SocketContext);
-  const [questions, setQuestions] = useState({
-    id: "2",
-    question: "What is the capital of France?",
-    options: {
-      a: "Berlin",
-      b: "Madrid",
-      c: "Rome",
-      d: "Paris",
-    },
-    correctAnswer: "d",
-  });
-
-  const moneyList = [
-    { id: "1)", amount: "Rs. 500" },
-    { id: "2)", amount: "Rs. 1,000" },
-    { id: "3)", amount: "Rs. 2,000" },
-    { id: "4)", amount: "Rs. 4,000" },
-    { id: "5)", amount: "Rs. 7,000" },
-    { id: "6)", amount: "Rs. 15,000" },
-    { id: "7)", amount: "Rs. 21,000" },
-  ].reverse();
+  const [timer, setTimer] = useState(30);
+  const intervalRef = useRef(null);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   useEffect(() => {
     if (socket) {
@@ -46,25 +23,28 @@ const Live = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (socket) {
-      socket.emit("connect-candidate");
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimer((prevTime) => {
-        if (prevTime > 0) {
+    if (data && data.startTimer && !intervalRef.current) {
+      intervalRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setTimer(30);
+            setSelectedAnswers([]);
+            return 0;
+          }
           return prevTime - 1;
-        } else {
-          clearInterval(countdown);
-          return 0;
-        }
-      });
-    }, 1000);
+        });
+      }, 1000);
+    }
 
-    return () => clearInterval(countdown);
-  }, [timer]);
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [data, socket]);
+
+  const distributedQuestion = data?.distributedQuestion;
 
   return (
     <Container>
@@ -86,52 +66,41 @@ const Live = () => {
                   ) : (
                     ""
                   )}
-                  <Question>Who is the first Prime Minister of India?</Question>
-                  <div>
-                    {data.startTimer ? (
-                      <div className="options">
-                        {Object.entries(questions.options).map(
-                          ([key, value]) => (
-                            <Button
-                              >
-                              <span>{`${key}) `}</span>
-                                { value}
-                              </Button>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <div>Please wait for the timer to start...</div>
-                    )}
-                  </div>
+                  {data.finalResults ? <div>
+                    <ul>
+                      {data.finalResults.map((eachResult, index) => <li key={index}>{
+                        <ul color={eachResult.isWinner ? 'green' : 'red'}>
+                          <li>{eachResult.userId}</li>
+                          <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
+                        </ul>
+                      }</li>)}
+                    </ul>
+                  </div> : <div>
+                    <Question>{distributedQuestion.question}</Question>
+                    <div>
+                      {data.startTimer ? (
+                        <>
+                          <div className="options">
+                            {Object.entries(distributedQuestion.options).map(
+                              ([key, value]) => (
+                                <Button
+                                  key={key}
+                                >
+                                  <span>{`${key})`}</span>
+                                  {value}
+                                </Button>
+                              )
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div>Please wait for the timer to start...</div>
+                      )}
+                    </div>
+                  </div>}
+
                 </div>
               )}
-            </div>
-
-            <div className="sideBar">
-              <div className="lifeLine">
-                <span>
-                  <img src={fiftyFiftyImg} alt="Fifty Fifty Lifeline" />
-                </span>
-                <span>
-                  <img src={audiencePoll} alt="Audience Poll Lifeline" />
-                </span>
-                <span>
-                  <img
-                    className="expertLifeLine"
-                    src={expertLifeLine}
-                    alt="Expert Lifeline"
-                  />
-                </span>
-              </div>
-              <ul>
-                {moneyList.map((el) => (
-                  <li key={el.id}>
-                    <span className="indexOfPrice">{el.id}</span>
-                    <span className="price">{el.amount}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         ) : (
@@ -143,3 +112,7 @@ const Live = () => {
 };
 
 export default Live;
+
+// first 4 45sec
+// after 4 90sec
+// first 4 45sec

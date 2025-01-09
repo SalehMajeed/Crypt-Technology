@@ -35,6 +35,14 @@ export const SocketProvider = ({ children }) => {
       setData(data);
     });
 
+    newSocket.on('quiz-ended', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('quiz-reset', (data) => {
+      setData(data);
+    });
+
     return () => {
       if (newSocket) {
         newSocket.disconnect();

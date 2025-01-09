@@ -8,6 +8,7 @@ import {
 } from './Home.styles'
 import './i.css'
 import { Link } from 'react-router-dom'
+import { ROUTES } from '../../Constants/routes'
 
 function Home() {
     return (
@@ -18,16 +19,24 @@ function Home() {
                 <div id='cont'>
                     <Pera size='2rem'>Join As</Pera>
                     <div id='cont2'>
-                        <Link to='/candidate'>
+                        <Link to={ROUTES.CANDIDATE}>
                             <Button>Candidate</Button>
                         </Link>
                         <Pera size='2rem'>-Or-</Pera>
-                        <Link to='master'>
+                        <Link to={ROUTES.MASTER}>
                             <Button>Master</Button>
                         </Link>
                         <Pera size='2rem'>-Or-</Pera>
-                        <Link to='live'>
+                        <Link to={ROUTES.LIVE}>
                             <Button>Live</Button>
+                        </Link>
+                        <Pera size='2rem'>-Or-</Pera>
+                        <Link to={ROUTES.FINALEHOST}>
+                            <Button>Finale Host</Button>
+                        </Link>
+                        <Pera size='2rem'>-Or-</Pera>
+                        <Link to={ROUTES.FINALECANDIDATE}>
+                            <Button>Finale Candidate</Button>
                         </Link>
                     </div >
                 </div>

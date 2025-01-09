@@ -12,14 +12,14 @@ import {
   TimerCircle,
   Button,
   Footer,
-} from "./FinalCandidate.style.jsx";
+} from "./FinaleCandidate.style.jsx";
 const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
 // // import questionPlaySound from "../assets/play.mp3";
 
 const socket = io("http://localhost:3001");
 
-function FinalCandidate() {
+function FinaleCandidate() {
   const [timer, setTimer] = useState(30);
   const [questions, setQuestions] = useState({});
   const [Qid, setQId] = useState(1);
@@ -200,4 +200,4 @@ function FinalCandidate() {
   );
 }
 
-export default FinalCandidate;
+export default FinaleCandidate;
