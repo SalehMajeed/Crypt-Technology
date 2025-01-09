@@ -43,6 +43,39 @@ export const SocketProvider = ({ children }) => {
       setData(data);
     });
 
+    newSocket.on('finale-master-connected', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-candidate-connected', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-candidate-connection-failed', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-quiz-started', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-quiz-reset', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-timer-started', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-timer-stop', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-quiz-submit', (data) => {
+      console.log(data);
+      setData(data);
+    });
+
     return () => {
       if (newSocket) {
         newSocket.disconnect();

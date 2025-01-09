@@ -19,17 +19,44 @@ let initialState = {
   finalResults: null
 };
 
+let finaleUsers = [];
+
+let initialFinaleState = {
+  waitForMaster: true,
+  startTime: null,
+  startTimer: false,
+  startQuiz: false,
+  showOptions: false,
+  distributedQuestion: [],
+  finalResults: null,
+  questionIndex: 0,
+}
+
 const resetInitialState = (questions) => {
   initialState = {
     waitForMaster: false,
     startTime: null,
     startTimer: false,
     startQuiz: false,
+    showOptions: false,
     distributedQuestion: questions,
     finalResults: null
   };
   timer = null;
   responseTimes = [];
+};
+
+const resetFinaleInitialState = () => {
+  initialFinaleState = {
+    ...initialFinaleState,
+    waitForMaster: true,
+    startTime: null,
+    startTimer: false,
+    startQuiz: false,
+    finalResults: null,
+    showOptions: false,
+    questionIndex: 0,
+  }
 };
 
 const connectAsMaster = async (socket) => {
@@ -148,7 +175,6 @@ const submitResponse = (data, io) => {
   const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
   // const rightAns = initialState.distributedQuestion.correctAnswer;
   const rightAns = 'Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel';
-  // "Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel"
   const finalResponse = {
     userId,
     time,
@@ -191,6 +217,62 @@ const getRoleCount = (role) => {
   }, 0);
 };
 
+const connectAsFinaleMaster = async (socket) => {
+  console.log("Finale Master connected");
+  finaleMaster = socket.id;
+  finaleUsers.push({ id: socket.id, role: "finale-master" });
+  const response = await axios("http://localhost:3002/questions");
+  data = response.data;
+  const distributedQuestion = data;
+  initialFinaleState = { ...initialFinaleState, waitForMaster: false, distributedQuestion };
+  socket.emit("finale-master-connected", initialFinaleState)
+};
+
+const connectAsFinaleCandidate = (socket) => {
+  let isConnected = true;
+  const totalCandidates = finaleUsers.length;
+  if (totalCandidates >= 100) {
+    console.log("Candidate limit reached");
+    isConnected = false;
+  } else {
+    finaleUsers.push({ id: socket.id, role: "finale-candidate" });
+    console.log("Finale Candidate connected");
+  }
+  if (!isConnected) {
+    socket.emit("finale-candidate-connection-failed", {
+      message: "Finale Candidate limit reached",
+    });
+  } else {
+    socket.emit("finale-candidate-connected", initialFinaleState);
+  }
+};
+
+const finaleStartQuiz = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, startQuiz: true };
+  io.emit("finale-quiz-started", initialFinaleState);
+};
+
+const finaleResetQuiz = (socket, io) => {
+  resetFinaleInitialState();
+  io.emit("finale-quiz-reset", initialFinaleState);
+};
+
+const finaleStartTimer = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, startTimer: true, showOptions:true };
+  io.emit("finale-timer-started", initialFinaleState);
+};
+
+const finaleStopTimer = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions:true, };
+  io.emit("finale-timer-stop", initialFinaleState);
+};
+
+const finaleSubmitResponse = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, questionIndex: initialFinaleState.questionIndex + 1 };
+  io.emit("finale-quiz-submit", initialFinaleState);
+};
+
+
 module.exports = {
   connectAsMaster,
   connectAsCandidate,
@@ -198,6 +280,8 @@ module.exports = {
   disconnectMaster,
   disconnectCandidate,
   disconnectLive,
+  connectAsFinaleMaster,
+  connectAsFinaleCandidate,
   isCandidate,
   isLive,
   startQuiz,
@@ -205,5 +289,9 @@ module.exports = {
   startTimer,
   stopTimer,
   submitResponse,
-  questions,
+  finaleStartQuiz,
+  finaleResetQuiz,
+  finaleStartTimer,
+  finaleStopTimer,
+  finaleSubmitResponse,
 };
