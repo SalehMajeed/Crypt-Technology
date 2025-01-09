@@ -258,17 +258,23 @@ const finaleResetQuiz = (socket, io) => {
 };
 
 const finaleStartTimer = (socket, io) => {
-  initialFinaleState = { ...initialFinaleState, startTimer: true, showOptions:true };
+  initialFinaleState = { ...initialFinaleState, startTimer: true, showOptions: true };
   io.emit("finale-timer-started", initialFinaleState);
 };
 
 const finaleStopTimer = (socket, io) => {
-  initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions:true, };
+  initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions: true, };
   io.emit("finale-timer-stop", initialFinaleState);
 };
 
 const finaleSubmitResponse = (socket, io) => {
-  initialFinaleState = { ...initialFinaleState, questionIndex: initialFinaleState.questionIndex + 1 };
+  initialFinaleState = {
+    ...initialFinaleState,
+    questionIndex: initialFinaleState.questionIndex + 1,
+    startQuiz: false,
+    startTimer: false,
+    showOptions: false,
+  };
   io.emit("finale-quiz-submit", initialFinaleState);
 };
 
