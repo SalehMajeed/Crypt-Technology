@@ -114,9 +114,9 @@ function FinaleHost() {
                 <h2>{timer}</h2>
               </TimerCircle>
             </Header>
-            {data ? <div className="optionsDiv">
+            {data && data.distributedQuestion[data.questionIndex]?.question ?  <div className="optionsDiv">
               <p>{data.distributedQuestion[data.questionIndex].question || "Loading question..."}</p>
-              {data.distributedQuestion[data.questionIndex].options ? (
+              {data.showOptions && data.distributedQuestion[data.questionIndex].options ? (
                 <div className="options">
                   {Object.values(data.distributedQuestion[data.questionIndex].options).map((el, index) => (
                     <Button
