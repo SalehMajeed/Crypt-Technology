@@ -46,11 +46,11 @@ const resetInitialState = (questions) => {
 
 const resetFinaleInitialState = () => {
   initialFinaleState = {
+    ...initialFinaleState,
     waitForMaster: true,
     startTime: null,
     startTimer: false,
     startQuiz: false,
-    distributedQuestion: [],
     finalResults: null,
     questionIndex: 0,
   }
@@ -222,10 +222,7 @@ const connectAsFinaleMaster = async (socket) => {
   data = response.data;
   const distributedQuestion = data;
   initialFinaleState = { ...initialFinaleState, waitForMaster: false, distributedQuestion };
-  socket.emit("finale-master-connected", {
-    message: "Connected as Finale Master",
-    initialFinaleState,
-  });
+  socket.emit("finale-master-connected", initialFinaleState)
 };
 
 const connectAsFinaleCandidate = (socket) => {
@@ -243,7 +240,7 @@ const connectAsFinaleCandidate = (socket) => {
       message: "Finale Candidate limit reached",
     });
   } else {
-    socket.emit("finale-candidate-connected", { initialFinaleState });
+    socket.emit("finale-candidate-connected", initialFinaleState);
   }
 };
 
@@ -264,12 +261,12 @@ const finaleStartTimer = (socket, io) => {
 
 const finaleStopTimer = (socket, io) => {
   initialFinaleState = { ...initialFinaleState, startTimer: false };
-  io.emit("finale-timer-stop", initialState);
+  io.emit("finale-timer-stop", initialFinaleState);
 };
 
 const finaleSubmitResponse = (socket, io) => {
   initialFinaleState = { ...initialFinaleState, questionIndex: initialFinaleState.questionIndex + 1 };
-  io.emit("finale-quiz-submit", initialState);
+  io.emit("finale-quiz-submit", initialFinaleState);
 };
 
 

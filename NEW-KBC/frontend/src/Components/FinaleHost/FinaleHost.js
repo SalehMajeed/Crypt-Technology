@@ -18,13 +18,10 @@ const timerSound = new Audio("path-to-your-15s-sound.mp3");
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
-
-  const [timer, setTimer] = useState(30);
-  const [questions, setQuestions] = useState({});
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [winner, setWinner] = useState(null);
-
   console.log(data);
+  const [timer, setTimer] = useState(30);
+  const [selectedAnswer, setSelectedAnswer] = useState([]);
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     if (socket) {
@@ -43,9 +40,16 @@ function FinaleHost() {
   const handleStartTimer = () => {
     socket.emit("start-finale-timer");
   }
-  
+
   const handleStopTimer = () => {
     socket.emit("stop-finale-timer");
+  }
+
+  const handleSubmitClick = (selectedAns) => {
+    socket.emit('submit-finale-response', {
+      userId: socket.id,
+      ans: selectedAns
+    });
   }
 
   const moneyList = [
@@ -63,7 +67,7 @@ function FinaleHost() {
       <CardWrapper>
         <div className="elementsDiv">
           <div className="quizElements">
-          <div className="submitBtnDiv">
+            <div className="submitBtnDiv">
               <Button className="submit-btn" onClick={handleResetQuiz}>
                 Reset Quiz
               </Button>
@@ -82,14 +86,14 @@ function FinaleHost() {
                 <h2>{timer}</h2>
               </TimerCircle>
             </Header>
-            <div className="optionsDiv">
-              <p>{questions.question || "Loading question..."}</p>
-              {questions.options ? (
+            {data ? <div className="optionsDiv">
+              <p>{data.distributedQuestion[data.questionIndex].question || "Loading question..."}</p>
+              {data.distributedQuestion[data.questionIndex].options ? (
                 <div className="options">
-                  {Object.values(questions.options).map((el, index) => (
+                  {Object.values(data.distributedQuestion[data.questionIndex].options).map((el, index) => (
                     <Button
                       key={index}
-                      onClick={() => setSelectedAnswer(el)}
+                      onClick={() => handleSubmitClick(el)}
                       className={selectedAnswer === el ? "selected" : ""}
                     >
                       {el}
@@ -99,7 +103,8 @@ function FinaleHost() {
               ) : (
                 <p>No options available</p>
               )}
-            </div>
+            </div> : <div>Loading</div>}
+
           </div>
           <div className="sideBar">
             <div className="lifeLine">
@@ -117,14 +122,14 @@ function FinaleHost() {
                 />
               </span>
             </div>
-            {moneyList.map((el) => {
+            {moneyList.map((el, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <li>
                     <span className="indexOfPrice">{el.id}</span>
                     <span className="price">{el.amount}</span>
                   </li>
-                </>
+                </React.Fragment>
               );
             })}
           </div>

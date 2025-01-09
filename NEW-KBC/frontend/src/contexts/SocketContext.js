@@ -72,6 +72,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('finale-quiz-submit', (data) => {
+      console.log(data);
       setData(data);
     });
 
