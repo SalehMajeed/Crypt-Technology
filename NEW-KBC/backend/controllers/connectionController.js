@@ -1,13 +1,17 @@
 const connectionService = require("../services/connectionService");
 const handleConnection = (socket, message) => {
   const parsedMessage = JSON.parse(message);
-
+  console.log(message);
   if (parsedMessage.type === "connect-master") {
     connectionService.connectAsMaster(socket);
   } else if (parsedMessage.type === "connect-candidate") {
     connectionService.connectAsCandidate(socket);
   } else if (parsedMessage.type === "connect-live") {
     connectionService.connectAsLive(socket);
+  } else if (parsedMessage.type === "connect-finale-master") {
+    connectionService.connectAsFinaleMaster(socket);
+  } else if (parsedMessage.type === "connect-finale-candidate") {
+    connectionService.connectAsFinaleCandidate(socket);
   }
 };
 
@@ -41,6 +45,28 @@ const handleSubmitResponse = (data, io) => {
   connectionService.submitResponse(data, io);
 };
 
+const handleFinaleStartQuiz = async (socket, io) => {
+  connectionService.finaleStartQuiz(socket, io);
+};
+
+const handleFinaleResetQuiz = (socket, io) => {
+  connectionService.finaleResetQuiz(socket, io);
+};
+
+const handleFinaleStartTimer = (socket, io) => {
+  connectionService.finaleStartTimer(socket, io);
+};
+
+const handleFinaleStopTimer = (socket, io) => {
+  connectionService.finaleStopTimer(socket, io);
+};
+
+const handleFinaleSubmitResponse = (data, io) => {
+  connectionService.finaleSubmitResponse(data, io);
+};
+
+
+
 module.exports = {
   handleConnection,
   handleDisconnection,
@@ -49,4 +75,9 @@ module.exports = {
   handleStartTimer,
   handleStopTimer,
   handleSubmitResponse,
+  handleFinaleStartQuiz,
+  handleFinaleResetQuiz,
+  handleFinaleStartTimer,
+  handleFinaleStopTimer,
+  handleFinaleSubmitResponse,
 };

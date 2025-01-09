@@ -31,11 +31,6 @@ const AppRoutes = () => {
       element: <Live />,
     },
     {
-      path: ROUTES.FINALEHOST,
-      exact: true,
-      element: <Live />,
-    },
-    {
       path: ROUTES.FINALECANDIDATE,
       exact: true,
       element: <FinaleCandidate />,
