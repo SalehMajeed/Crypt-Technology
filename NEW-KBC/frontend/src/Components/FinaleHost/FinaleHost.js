@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { io } from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 import fiftyFiftyImg from "../assets/fifty_fifty.png";
 import audiencePoll from "../assets/audience_poll.png";
 import expertLifeLine from "../assets/ask_the_expert.png";
@@ -22,24 +20,10 @@ function FinaleHost() {
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
 
-  // State to track used lifelines
-  const [usedLifelines, setUsedLifelines] = useState({
-    fiftyFifty: false,
-    audiencePoll: false,
-    askTheExpert: false,
-  });
-
   if (data && indexRef.current !== data?.questionIndex) {
     setTimer(30);
     indexRef.current = data.questionIndex;
   }
-
-  const handleLifelineClick = (lifeline) => {
-    setUsedLifelines((prev) => ({
-      ...prev,
-      [lifeline]: true,
-    }));
-  };
 
   useEffect(() => {
     if (socket) {
@@ -73,11 +57,6 @@ function FinaleHost() {
   };
 
   const handleResetQuiz = () => {
-    setUsedLifelines({
-      fiftyFifty: false,
-      audiencePoll: false,
-      askTheExpert: false,
-    });
     socket.emit("reset-finale-quiz");
   };
 
@@ -85,8 +64,8 @@ function FinaleHost() {
     socket.emit("start-finale-timer");
   };
 
-  const handleStopTimer = () => {
-    socket.emit("stop-finale-timer");
+  const handleStopTimer = (name) => {
+    socket.emit("stop-finale-timer", { lifeline: name });
   };
 
   const handleSubmitClick = (selectedAns) => {
@@ -150,87 +129,94 @@ function FinaleHost() {
                     "Loading question..."}
                 </p>
                 {data.showOptions &&
-                data.distributedQuestion[data.questionIndex].options && (
-                  <div className="options">
-                    {Object.values(
-                      data.distributedQuestion[data.questionIndex].options
-                    ).map((el, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => handleSubmitClick(el)}
-                        className={`${
-                          data.submittedQuestion === el ? "incorrect" : ""
-                        } ${
-                          data.showResult &&
-                          data.distributedQuestion[data.questionIndex]
-                            ?.correctAnswer === el
-                            ? "correct"
-                            : ""
-                        }`}
-                      >
-                        {el}
-                      </Button>
-                    ))}
-                  </div>
-                )}
+                  data.distributedQuestion[data.questionIndex].options && (
+                    <div className="options">
+                      {Object.keys(
+                        data.distributedQuestion[data.questionIndex].options
+                      ).map((currentKey, index) => {
+                        console.log(data.startTimer);
+                        let el = data.distributedQuestion[data.questionIndex].options[currentKey];
+                        if(
+                          data.startTimer === false && 
+                          data.lifeLine.fiftyOnce &&
+                          data.lifeLine.fifty === false &&
+                          (currentKey in data.distributedQuestion[data.questionIndex].fifty)) {
+                            console.log(data.lifeLine.fiftyOnce)
+                          el = "50/50";
+                        }
+                        return (<Button
+                          key={index}
+                          onClick={() => handleSubmitClick(el)}
+                          className={`${data.submittedQuestion === el ? "incorrect" : ""
+                            } ${data.showResult &&
+                              data.distributedQuestion[data.questionIndex]
+                                ?.correctAnswer === el
+                              ? "correct"
+                              : ""
+                            }`}
+                        >
+                          {el}
+                        </Button>)
+                      })}
+                    </div>
+                  )}
               </div>
             ) : (
               <div>Loading</div>
             )}
           </div>
-          <div className="sideBar">
-            <div className="lifeLine">
-              <span
-                className={`lifeline ${
-                  usedLifelines.fiftyFifty ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={fiftyFiftyImg}
-                  alt="fifty_fifty.png"
-                  onClick={() => handleLifelineClick("fiftyFifty")}
-                />
-              </span>
-              <span
-                className={`lifeline ${
-                  usedLifelines.audiencePoll ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={audiencePoll}
-                  alt="audience-poll"
-                  onClick={() => handleLifelineClick("audiencePoll")}
-                />
-              </span>
-              <span
-                className={`lifeline ${
-                  usedLifelines.askTheExpert ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={expertLifeLine}
-                  alt="expertLifeLine"
-                  onClick={() => handleLifelineClick("askTheExpert")}
-                />
-              </span>
+          {data &&
+
+            <div className="sideBar">
+              <div className="lifeLine">
+                <span
+                  className={`lifeline ${data.lifeLine?.fifty ? "" : "used-lifeline"
+                    }`}
+                >
+                  <img
+                    src={fiftyFiftyImg}
+                    alt="fifty_fifty.png"
+                    onClick={() => handleStopTimer("fifty")}
+                  />
+                </span>
+                <span
+                  className={`lifeline ${data.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                    }`}
+                >
+                  <img
+                    src={audiencePoll}
+                    alt="audience-poll"
+                    onClick={() => handleStopTimer("audiencePaul")}
+                  />
+                </span>
+                <span
+                  className={`lifeline ${data.lifeLine?.askExpert ? "" : "used-lifeline"
+                    }`}
+                >
+                  <img
+                    src={expertLifeLine}
+                    alt="expertLifeLine"
+                    onClick={() => handleStopTimer("askExpert")}
+                  />
+                </span>
+              </div>
+              {moneyList.map((el, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <li
+                      style={{
+                        backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "black" : ""
+                          } `,
+                      }}
+                    >
+                      <span className="indexOfPrice">{el.id}</span>
+                      <span className="price">{el.amount}</span>
+                    </li>
+                  </React.Fragment>
+                );
+              })}
             </div>
-            {moneyList.map((el, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <li
-                    style={{
-                      backgroundColor: `${
-                        data?.questionIndex + 1 === el.squenceId ? "black" : ""
-                      } `,
-                    }}
-                  >
-                    <span className="indexOfPrice">{el.id}</span>
-                    <span className="price">{el.amount}</span>
-                  </li>
-                </React.Fragment>
-              );
-            })}
-          </div>
+          }
         </div>
         <Footer>{winner && <p>Winner: {winner}</p>}</Footer>
       </CardWrapper>
