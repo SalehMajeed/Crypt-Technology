@@ -69,6 +69,7 @@ const Candidate = () => {
     }
   }, [selectedAnswers])
   const distributedQuestion = data?.distributedQuestion;
+  console.log(data);
 
   return (
     <Container>
@@ -105,7 +106,7 @@ const Candidate = () => {
                     {data.startTimer ? (
                       <>
                         <div className="options">
-                          {Object.entries(distributedQuestion.options).map(
+                          {Object.entries(distributedQuestion.options || {}).map(
                             ([key, value]) => (
                               <Button
                                 key={key}

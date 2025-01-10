@@ -67,7 +67,7 @@ const Live = () => {
                   ""
                 )}
                 {data.finalResults ? (
-                  <div> className='winnersDiv'
+                  <div>
                     <ul>
                       {data.finalResults.map((eachResult, index) => (
                         <li key={index}>
