@@ -10,7 +10,8 @@
                 "d": "चिकु"
             },
             "correctAnswer": "अंगुर",
-            "Column8": "child"
+            "Column8": "child",
+            "fifty":{"a":true, "d":true}
         },
         {
             "id": 3,
@@ -22,7 +23,8 @@
                 "d": "रखडी - बोरद्ध"
             },
             "correctAnswer": "रखडी -बोरद्ध",
-            "Column8": "house wife"
+            "Column8": "house wife",
+            "fifty":{"a":true, "d":true}
         },
         {
             "id": 4,
@@ -34,7 +36,8 @@
                 "d": "आषाढ़"
             },
             "correctAnswer": "वैशाखए",
-            "Column8": "house wife"
+            "Column8": "house wife",
+            "fifty":{"a":true, "d":false}
         },
         {
             "id": 5,

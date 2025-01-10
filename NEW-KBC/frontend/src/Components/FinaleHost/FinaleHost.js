@@ -20,8 +20,19 @@ function FinaleHost() {
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
 
+  const moneyList = [
+    { squenceId: 1, id: "1)", timer:30,amount: "Rs. 500" },
+    { squenceId: 2, id: "2)", timer:30,amount: "Rs. 1,000" },
+    { squenceId: 3, id: "3)", timer:30,amount: "Rs. 2,000" },
+    { squenceId: 4, id: "4)", timer:45,amount: "Rs. 4,000" },
+    { squenceId: 5, id: "5)", timer:45,amount: "Rs. 7,000" },
+    { squenceId: 6, id: "6)", timer:60,amount: "Rs. 15,000" },
+    { squenceId: 7, id: "7)", timer:60,amount: "Rs. 21,000" },
+  ].reverse();
+
   if (data && indexRef.current !== data?.questionIndex) {
-    setTimer(30);
+    const currentIndex = data.questionIndex
+    setTimer(moneyList[currentIndex].timer);
     indexRef.current = data.questionIndex;
   }
 
@@ -81,16 +92,6 @@ function FinaleHost() {
   const handleNextQuestion = () => {
     socket.emit("finale-next-question");
   };
-
-  const moneyList = [
-    { squenceId: 1, id: "1)", amount: "Rs. 500" },
-    { squenceId: 2, id: "2)", amount: "Rs. 1,000" },
-    { squenceId: 3, id: "3)", amount: "Rs. 2,000" },
-    { squenceId: 4, id: "4)", amount: "Rs. 4,000" },
-    { squenceId: 5, id: "5)", amount: "Rs. 7,000" },
-    { squenceId: 6, id: "6)", amount: "Rs. 15,000" },
-    { squenceId: 7, id: "7)", amount: "Rs. 21,000" },
-  ].reverse();
 
   return (
     <Container>
