@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import {
@@ -12,12 +13,14 @@ import {
 
 const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(5);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [searchParams] = useSearchParams();
+  const joinId = searchParams.get("id");
 
   useEffect(() => {
-    if (socket) {
+    if (socket && socket?.connected === false) {
       socket.emit("connect-candidate");
     }
   }, [socket]);
@@ -31,13 +34,8 @@ const Candidate = () => {
             intervalRef.current = null;
 
             const currentTime = Date.now();
-            const responseTime = Math.floor(currentTime - data.startTime);
-            socket.emit("submit-response", {
-              userId: socket.id,
-              time: responseTime,
-            });
-            setTimer(30);
-            setSelectedAnswers([]);
+            const responseTime = currentTime - data.startTime;
+            socket.emit("submit-response", { userId: socket.id, joinId, time: responseTime, ans: [] });
             return 0;
           }
           return prevTime - 1;
@@ -51,15 +49,18 @@ const Candidate = () => {
     };
   }, [data, socket]);
 
+  useEffect(() => {
+    setTimer(5);
+    setSelectedAnswers([]);
+  }, [data?.finalResults])
+
   const handleSubmit = () => {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
     const currentTime = Date.now();
     console.log(data.startTime);
-    const responseTime = Math.floor((currentTime - data.startTime));
-    socket.emit("submit-response", { userId: socket.id, time: responseTime, ans: selectedAnswers });
-    setTimer(30);
-    setSelectedAnswers([]);
+    const responseTime = (currentTime - data.startTime);
+    socket.emit("submit-response", { userId: socket.id, joinId, time: responseTime, ans: selectedAnswers });
   };
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const Candidate = () => {
                     <ul>
                       {data.finalResults.map((eachResult, index) => <li key={index}>{
                         <ul color={eachResult.isWinner ? 'green' : 'red'}>
-                          <li>{eachResult.userId}</li>
+                          <li>{eachResult.joinId}</li>
                           <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
                         </ul>
                       }</li>)}
