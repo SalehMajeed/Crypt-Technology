@@ -78,6 +78,12 @@ function FinaleHost() {
     socket.emit("stop-finale-timer", { lifeline: name });
   };
 
+  const handleSubmitClick = (selectedAns) => {
+    socket.emit("submit-finale-ans", {
+      userAns: selectedAns,
+    });
+  };
+
   const handleSubmitResponse = () => {
     socket.emit("submit-finale-response");
   };
