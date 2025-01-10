@@ -11,6 +11,11 @@ import {
   Footer,
 } from "../FinaleCandidate/FinaleCandidate.style.jsx";
 import SocketContext from "../../contexts/SocketContext.js";
+import ticSound from "../assets/tick-sound.mp3";
+import themeSound from "../assets/theme-audio.mp3";
+import wrongSubmitSound from "../assets/wrong.mp3";
+import correctSubmitSound from "../assets/correct.mp3";
+import questionPlaySound from '../assets/play.mp3';
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
@@ -18,6 +23,11 @@ function FinaleHost() {
   const [winner, setWinner] = useState(null);
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
+  const hanldeClickSound = useRef(new Audio(ticSound));
+  const handleThemeSound = new Audio(themeSound);
+  const handleWrongSound = new Audio(wrongSubmitSound);
+  const handleCorrectSubmissionSound = new Audio(correctSubmitSound);
+  const handleQuestionPlaySound = new Audio(questionPlaySound);
 
   const moneyList = [
     { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
@@ -30,7 +40,7 @@ function FinaleHost() {
   ].reverse();
 
   if (data && indexRef.current !== data?.questionIndex) {
-    const currentIndex = 6 - data.questionIndex
+    const currentIndex = 6 - data.questionIndex;
     setTimer(moneyList[currentIndex]?.timer);
     indexRef.current = data.questionIndex;
   }
@@ -60,25 +70,35 @@ function FinaleHost() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [ data, socket]);
+  }, [data, socket]);
 
   const handleStartQuiz = () => {
+    handleQuestionPlaySound.play();
     socket.emit("start-finale-quiz");
   };
 
   const handleResetQuiz = () => {
+    handleThemeSound.play();
     socket.emit("reset-finale-quiz");
   };
 
   const handleStartTimer = () => {
+    hanldeClickSound.current.play();
     socket.emit("start-finale-timer");
   };
+
+  const pauseTimer = () => {
+    console.dir(hanldeClickSound);
+    hanldeClickSound.current.pause()
+    // hanldeClickSound.pause = true;
+  }
 
   const handleStopTimer = (name) => {
     socket.emit("stop-finale-timer", { lifeline: name });
   };
 
   const handleSubmitClick = (selectedAns) => {
+    hanldeClickSound.current.pause()
     socket.emit("submit-finale-ans", {
       userAns: selectedAns,
     });
@@ -89,8 +109,17 @@ function FinaleHost() {
   };
 
   const handleNextQuestion = () => {
+    handleQuestionPlaySound.play()
     socket.emit("finale-next-question");
   };
+
+  const handleWinner = () => {
+    handleCorrectSubmissionSound.play();
+  }
+
+  const handleLooser = () => {
+    handleWrongSound.play();
+  }
 
   return (
     <Container>
@@ -107,7 +136,7 @@ function FinaleHost() {
               <Button className="submit-btn" onClick={handleStartTimer}>
                 Start Timer
               </Button>
-              <Button className="submit-btn" onClick={handleStopTimer}>
+              <Button className="submit-btn" onClick={pauseTimer}>
                 Stop Timer
               </Button>
               <Button className="submit-btn" onClick={handleNextQuestion}>
@@ -115,6 +144,14 @@ function FinaleHost() {
               </Button>
               <Button className="submit-btn" onClick={handleSubmitResponse}>
                 submit ans
+              </Button>
+              
+              <Button className="submit-btn" onClick={handleWinner}>
+                play winner
+              </Button>
+              
+              <Button className="submit-btn" onClick={handleLooser}>
+                play looser
               </Button>
             </div>
             <Header>
@@ -134,37 +171,46 @@ function FinaleHost() {
                       {Object.keys(
                         data.distributedQuestion[data.questionIndex].options
                       ).map((currentKey, index) => {
-                        let el = data.distributedQuestion[data.questionIndex].options[currentKey];
+                        let el =
+                          data.distributedQuestion[data.questionIndex].options[
+                            currentKey
+                          ];
                         if (
                           data.startTimer === false &&
                           data.lifeLine.fiftyOnce &&
                           data.lifeLine.fifty === false &&
-                          Object.keys(data.distributedQuestion[data.questionIndex].fifty || {}).includes(currentKey)) {
-                          console.log(data.lifeLine.fiftyOnce)
+                          Object.keys(
+                            data.distributedQuestion[data.questionIndex]
+                              .fifty || {}
+                          ).includes(currentKey)
+                        ) {
+                          console.log(data.lifeLine.fiftyOnce);
                           el = "50/50";
                         }
-                        return (<Button
-                          key={index}
-                          onClick={() => handleSubmitClick(el)}
-                          className={`${
-                            data.submittedQuestion === el
-                              ? data.showResult
-                                ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === el
-                                  ? "correct" 
-                                  : "incorrect" 
-                                : "selected"
-                              : ""
-                          } ${
-                            data.showResult &&
-                            data.distributedQuestion[data.questionIndex]
-                              ?.correctAnswer === el
-                              ? "correct" 
-                              : ""
-                          }`}
-                        >
-                          {el}
-                        </Button>)
+                        return (
+                          <Button
+                            key={index}
+                            onClick={() => handleSubmitClick(el)}
+                            className={`${
+                              data.submittedQuestion === el
+                                ? data.showResult
+                                  ? data.distributedQuestion[data.questionIndex]
+                                      ?.correctAnswer === el
+                                    ? "correct"
+                                    : "incorrect"
+                                  : "selected"
+                                : ""
+                            } ${
+                              data.showResult &&
+                              data.distributedQuestion[data.questionIndex]
+                                ?.correctAnswer === el
+                                ? "correct"
+                                : ""
+                            }`}
+                          >
+                            {el}
+                          </Button>
+                        );
                       })}
                     </div>
                   )}
@@ -173,13 +219,13 @@ function FinaleHost() {
               <div>Loading</div>
             )}
           </div>
-          {data &&
-
+          {data && (
             <div className="sideBar">
               <div className="lifeLine">
                 <span
-                  className={`lifeline ${data.lifeLine?.fifty ? "" : "used-lifeline"
-                    }`}
+                  className={`lifeline ${
+                    data.lifeLine?.fifty ? "" : "used-lifeline"
+                  }`}
                 >
                   <img
                     src={fiftyFiftyImg}
@@ -188,8 +234,9 @@ function FinaleHost() {
                   />
                 </span>
                 <span
-                  className={`lifeline ${data.lifeLine?.audiencePaul ? "" : "used-lifeline"
-                    }`}
+                  className={`lifeline ${
+                    data.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                  }`}
                 >
                   <img
                     src={audiencePoll}
@@ -197,25 +244,30 @@ function FinaleHost() {
                     onClick={() => handleStopTimer("audiencePaul")}
                   />
                 </span>
-                {data.questionIndex === 3 &&
+                {data.questionIndex === 3 && (
                   <span
-                    className={`lifeline ${data.lifeLine?.askExpert ? "" : "used-lifeline"
-                      }`}
+                    className={`lifeline ${
+                      data.lifeLine?.askExpert ? "" : "used-lifeline"
+                    }`}
                   >
                     <img
                       src={expertLifeLine}
                       alt="expertLifeLine"
                       onClick={() => handleStopTimer("askExpert")}
                     />
-                  </span>}
+                  </span>
+                )}
               </div>
               {moneyList.map((el, index) => {
                 return (
                   <React.Fragment key={index}>
                     <li
                       style={{
-                        backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "black" : ""
-                          } `,
+                        backgroundColor: `${
+                          data?.questionIndex + 1 === el.squenceId
+                            ? "black"
+                            : ""
+                        } `,
                       }}
                     >
                       <span className="indexOfPrice">{el.id}</span>
@@ -225,7 +277,7 @@ function FinaleHost() {
                 );
               })}
             </div>
-          }
+          )}
         </div>
         <Footer>{winner && <p>Winner: {winner}</p>}</Footer>
       </CardWrapper>

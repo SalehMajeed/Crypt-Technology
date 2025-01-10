@@ -1,12 +1,19 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import { Container, Button, Pera, CardWrapper } from "./Master.styles";
+<<<<<<< HEAD
 import resetTimeSound from '../assets/start.mp3';
 
 const startSound = new Audio(resetTimeSound);
+=======
+import playSound from "../assets/play.mp3";
+import timerSound from "../assets/tictok.mp3";
+>>>>>>> a41e98b945cf6cd6790c00b71d65e35d1c882de1
 
 const Master = () => {
   const { socket, data } = useContext(SocketContext);
+  const playTheme = new Audio(playSound);
+  const playTimer = useRef(new Audio(timerSound));
 
   useEffect(() => {
     if (socket) {
@@ -15,20 +22,27 @@ const Master = () => {
   }, [socket]);
 
   const handleStartQuiz = () => {
+    playTheme.play();
     socket.emit("start-quiz");
   };
 
   const handleResetQuiz = () => {
+<<<<<<< HEAD
     startSound.play();
+=======
+    playTimer.current.pause();
+>>>>>>> a41e98b945cf6cd6790c00b71d65e35d1c882de1
     socket.emit("reset-quiz");
   };
 
   const handleStartTimer = () => {
+    playTimer.current.play();
     socket.emit("start-timer");
   };
 
   const handleStopTimer = () => {
-    socket.emit("stop-timer");
+    playTimer.current.pause(); // Stop the timer sound immediately
+    // socket.emit("stop-timer");
   };
 
   const handleStartTheme = () => {
@@ -48,7 +62,8 @@ const Master = () => {
         </CardWrapper>
       ) : (
         <div>
-          <Pera>Loading</Pera></div>
+          <Pera>Loading</Pera>
+        </div>
       )}
     </Container>
   );
