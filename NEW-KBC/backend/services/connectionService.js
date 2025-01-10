@@ -177,18 +177,22 @@ const checkForWinner = (arr) => {
 }
 
 const submitResponse = (data, io) => {
-  const { userId, time, ans = [] } = data;
+  const { userId, joinId, time, ans = [] } = data;
   const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
   // const rightAns = initialState.distributedQuestion.correctAnswer;
   const rightAns = 'Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel';
   const finalResponse = {
     userId,
-    time,
+    joinId,
+    time: finalAns.length <= 0 ? 3000 : time,
     ans: finalAns,
     correctAns: rightAns.trim() === finalAns,
     isWinner: false,
   };
-  responseTimes = [...responseTimes, finalResponse];
+  const doesUserSubmitted = responseTimes.some(eachTime => eachTime.userId === finalResponse.userId);
+  if(!doesUserSubmitted) {
+    responseTimes = [...responseTimes, finalResponse];
+  }
   if (responseTimes.length >= process.env.USER_LIMIT) {
     const getWinner = checkForWinner(responseTimes);
     if (getWinner !== -1) {

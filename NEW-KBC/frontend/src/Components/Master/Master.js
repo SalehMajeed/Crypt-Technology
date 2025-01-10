@@ -1,10 +1,9 @@
 import { useContext, useEffect } from "react";
 import SocketContext from "../../contexts/SocketContext";
-import { Container, Button , Pera, CardWrapper } from "./Master.styles";
+import { Container, Button, Pera, CardWrapper } from "./Master.styles";
+
 const Master = () => {
   const { socket, data } = useContext(SocketContext);
-
-  console.log(data);
 
   useEffect(() => {
     if (socket) {
@@ -33,6 +32,7 @@ const Master = () => {
       {socket && socket.connected ? (
         <CardWrapper>
           <Pera>Master-Role</Pera>
+          <Button>Start Theme song</Button>
           <Button onClick={handleResetQuiz}>Reset Quiz</Button>
           <Button onClick={handleStartQuiz}>Start Quiz</Button>
           <Button onClick={handleStartTimer}>Start Timer</Button>
@@ -40,7 +40,7 @@ const Master = () => {
         </CardWrapper>
       ) : (
         <div>
-        <Pera>Loading</Pera></div>
+          <Pera>Loading</Pera></div>
       )}
     </Container>
   );
