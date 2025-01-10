@@ -13,7 +13,7 @@ import {
 
 const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(15);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [searchParams] = useSearchParams();

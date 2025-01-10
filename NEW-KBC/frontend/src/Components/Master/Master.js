@@ -1,9 +1,13 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import { Container, Button, Pera, CardWrapper } from "./Master.styles";
+import playSound from "../assets/play.mp3";
+import timerSound from "../assets/tictok.mp3";
 
 const Master = () => {
   const { socket, data } = useContext(SocketContext);
+  const playTheme = new Audio(playSound);
+  const playTimer = useRef(new Audio(timerSound));
 
   useEffect(() => {
     if (socket) {
@@ -12,19 +16,23 @@ const Master = () => {
   }, [socket]);
 
   const handleStartQuiz = () => {
+    playTheme.play();
     socket.emit("start-quiz");
   };
 
   const handleResetQuiz = () => {
+    playTimer.current.pause();
     socket.emit("reset-quiz");
   };
 
   const handleStartTimer = () => {
+    playTimer.current.play();
     socket.emit("start-timer");
   };
 
   const handleStopTimer = () => {
-    socket.emit("stop-timer");
+    playTimer.current.pause(); // Stop the timer sound immediately
+    // socket.emit("stop-timer");
   };
 
   return (
@@ -40,7 +48,8 @@ const Master = () => {
         </CardWrapper>
       ) : (
         <div>
-          <Pera>Loading</Pera></div>
+          <Pera>Loading</Pera>
+        </div>
       )}
     </Container>
   );
