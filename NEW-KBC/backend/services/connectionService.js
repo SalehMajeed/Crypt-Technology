@@ -32,6 +32,12 @@ let initialFinaleState = {
   questionIndex: 0,
   submittedQuestion: null,
   showResult: false,
+  lifeLine:{
+    fifty: true,
+    fiftyOnce: false,
+    audiencePaul: true,
+    askExpert: true,
+  }
 }
 
 const resetInitialState = (questions) => {
@@ -60,6 +66,12 @@ const resetFinaleInitialState = () => {
     questionIndex: 0,
     submittedQuestion: null,
     showResult: false,
+    lifeLine:{
+      fifty: true,
+      fiftyOnce: false,
+      audiencePaul: true,
+      askExpert: true,
+    }
   }
 };
 
@@ -272,7 +284,13 @@ const finaleStartTimer = (socket, io) => {
   io.emit("finale-timer-started", initialFinaleState);
 };
 
-const finaleStopTimer = (socket, io) => {
+const finaleStopTimer = (data, socket, io) => {
+  const {lifeline} = data;
+  if(lifeline === 'fifty') {
+    initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, fiftyOnce:true};
+  }
+  initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, [lifeline]:false},
+  initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, lifeLine: initialFinaleState.lifeLine};
   initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions: true, };
   io.emit("finale-timer-stop", initialFinaleState);
 };
@@ -300,6 +318,10 @@ const finaleNextQuestion = (socket, io) => {
     showOptions: false,
     showResult: false,
     submittedQuestion: null,
+    lifeLine:{
+      ...initialFinaleState.lifeLine,
+      fiftyOnce: false,
+    }
   };
   io.emit("finale-next-question", initialFinaleState);
 };

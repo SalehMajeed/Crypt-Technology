@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { io } from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 import fiftyFiftyImg from "../assets/fifty_fifty.png";
 import audiencePoll from "../assets/audience_poll.png";
 import expertLifeLine from "../assets/ask_the_expert.png";
@@ -21,24 +19,21 @@ function FinaleHost() {
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
 
-  // State to track used lifelines
-  const [usedLifelines, setUsedLifelines] = useState({
-    fiftyFifty: false,
-    audiencePoll: false,
-    askTheExpert: false,
-  });
+  const moneyList = [
+    { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
+    { squenceId: 2, id: "2)", timer: 30, amount: "Rs. 1,000" },
+    { squenceId: 3, id: "3)", timer: 30, amount: "Rs. 2,000" },
+    { squenceId: 4, id: "4)", timer: 45, amount: "Rs. 4,000" },
+    { squenceId: 5, id: "5)", timer: 45, amount: "Rs. 8,000" },
+    { squenceId: 6, id: "6)", timer: 60, amount: "Rs. 15,000" },
+    { squenceId: 7, id: "7)", timer: 60, amount: "Rs. 21,000" },
+  ].reverse();
 
   if (data && indexRef.current !== data?.questionIndex) {
-    setTimer(30);
+    const currentIndex = 6 - data.questionIndex
+    setTimer(moneyList[currentIndex]?.timer);
     indexRef.current = data.questionIndex;
   }
-
-  const handleLifelineClick = (lifeline) => {
-    setUsedLifelines((prev) => ({
-      ...prev,
-      [lifeline]: true,
-    }));
-  };
 
   useEffect(() => {
     if (socket) {
@@ -72,11 +67,6 @@ function FinaleHost() {
   };
 
   const handleResetQuiz = () => {
-    setUsedLifelines({
-      fiftyFifty: false,
-      audiencePoll: false,
-      askTheExpert: false,
-    });
     socket.emit("reset-finale-quiz");
   };
 
@@ -84,8 +74,8 @@ function FinaleHost() {
     socket.emit("start-finale-timer");
   };
 
-  const handleStopTimer = () => {
-    socket.emit("stop-finale-timer");
+  const handleStopTimer = (name) => {
+    socket.emit("stop-finale-timer", { lifeline: name });
   };
 
   const handleSubmitResponse = () => {
@@ -95,16 +85,6 @@ function FinaleHost() {
   const handleNextQuestion = () => {
     socket.emit("finale-next-question");
   };
-
-  const moneyList = [
-    { squenceId: 1, id: "1)", amount: "Rs. 500" },
-    { squenceId: 2, id: "2)", amount: "Rs. 1,000" },
-    { squenceId: 3, id: "3)", amount: "Rs. 2,000" },
-    { squenceId: 4, id: "4)", amount: "Rs. 4,000" },
-    { squenceId: 5, id: "5)", amount: "Rs. 7,000" },
-    { squenceId: 6, id: "6)", amount: "Rs. 15,000" },
-    { squenceId: 7, id: "7)", amount: "Rs. 21,000" },
-  ].reverse();
 
   return (
     <Container>
@@ -145,11 +125,21 @@ function FinaleHost() {
                 {data.showOptions &&
                   data.distributedQuestion[data.questionIndex].options && (
                     <div className="options">
-                      {Object.values(
+                      {Object.keys(
                         data.distributedQuestion[data.questionIndex].options
-                      ).map((el, index) => (
-                        <Button
+                      ).map((currentKey, index) => {
+                        let el = data.distributedQuestion[data.questionIndex].options[currentKey];
+                        if (
+                          data.startTimer === false &&
+                          data.lifeLine.fiftyOnce &&
+                          data.lifeLine.fifty === false &&
+                          Object.keys(data.distributedQuestion[data.questionIndex].fifty || {}).includes(currentKey)) {
+                          console.log(data.lifeLine.fiftyOnce)
+                          el = "50/50";
+                        }
+                        return (<Button
                           key={index}
+                          onClick={() => handleSubmitClick(el)}
                           className={`${
                             data.submittedQuestion === el
                               ? data.showResult
@@ -168,8 +158,8 @@ function FinaleHost() {
                           }`}
                         >
                           {el}
-                        </Button>
-                      ))}
+                        </Button>)
+                      })}
                     </div>
                   )}
               </div>
@@ -177,59 +167,59 @@ function FinaleHost() {
               <div>Loading</div>
             )}
           </div>
-          <div className="sideBar">
-            <div className="lifeLine">
-              <span
-                className={`lifeline ${
-                  usedLifelines.fiftyFifty ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={fiftyFiftyImg}
-                  alt="fifty_fifty.png"
-                  onClick={() => handleLifelineClick("fiftyFifty")}
-                />
-              </span>
-              <span
-                className={`lifeline ${
-                  usedLifelines.audiencePoll ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={audiencePoll}
-                  alt="audience-poll"
-                  onClick={() => handleLifelineClick("audiencePoll")}
-                />
-              </span>
-              <span
-                className={`lifeline ${
-                  usedLifelines.askTheExpert ? "used-lifeline" : ""
-                }`}
-              >
-                <img
-                  src={expertLifeLine}
-                  alt="expertLifeLine"
-                  onClick={() => handleLifelineClick("askTheExpert")}
-                />
-              </span>
-            </div>
-            {moneyList.map((el, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <li
-                    style={{
-                      backgroundColor: `${
-                        data?.questionIndex + 1 === el.squenceId ? "black" : ""
-                      } `,
-                    }}
+          {data &&
+
+            <div className="sideBar">
+              <div className="lifeLine">
+                <span
+                  className={`lifeline ${data.lifeLine?.fifty ? "" : "used-lifeline"
+                    }`}
+                >
+                  <img
+                    src={fiftyFiftyImg}
+                    alt="fifty_fifty.png"
+                    onClick={() => handleStopTimer("fifty")}
+                  />
+                </span>
+                <span
+                  className={`lifeline ${data.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                    }`}
+                >
+                  <img
+                    src={audiencePoll}
+                    alt="audience-poll"
+                    onClick={() => handleStopTimer("audiencePaul")}
+                  />
+                </span>
+                {data.questionIndex === 3 &&
+                  <span
+                    className={`lifeline ${data.lifeLine?.askExpert ? "" : "used-lifeline"
+                      }`}
                   >
-                    <span className="indexOfPrice">{el.id}</span>
-                    <span className="price">{el.amount}</span>
-                  </li>
-                </React.Fragment>
-              );
-            })}
-          </div>
+                    <img
+                      src={expertLifeLine}
+                      alt="expertLifeLine"
+                      onClick={() => handleStopTimer("askExpert")}
+                    />
+                  </span>}
+              </div>
+              {moneyList.map((el, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <li
+                      style={{
+                        backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "black" : ""
+                          } `,
+                      }}
+                    >
+                      <span className="indexOfPrice">{el.id}</span>
+                      <span className="price">{el.amount}</span>
+                    </li>
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          }
         </div>
         <Footer>{winner && <p>Winner: {winner}</p>}</Footer>
       </CardWrapper>

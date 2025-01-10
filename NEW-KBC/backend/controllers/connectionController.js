@@ -57,8 +57,8 @@ const handleFinaleStartTimer = (socket, io) => {
   connectionService.finaleStartTimer(socket, io);
 };
 
-const handleFinaleStopTimer = (socket, io) => {
-  connectionService.finaleStopTimer(socket, io);
+const handleFinaleStopTimer = (data, socket, io) => {
+  connectionService.finaleStopTimer(data,socket, io);
 };
 
 const handleFinaleNextAns = () => {

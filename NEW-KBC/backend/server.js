@@ -33,10 +33,10 @@ io.on('connection', (socket) => {
   socket.on('start-finale-quiz', () => handleFinaleStartQuiz(socket, io));
   socket.on('reset-finale-quiz', () => handleFinaleResetQuiz(socket, io));
   socket.on('start-finale-timer', () => handleFinaleStartTimer(socket, io));
-  socket.on('stop-finale-timer', () => handleFinaleStopTimer(socket, io));
+  socket.on('stop-finale-timer', (data) => handleFinaleStopTimer(data, socket, io));
   socket.on('submit-finale-ans', (data) => handleSubmitFinaleAns(data, io));
   socket.on('submit-finale-response', () => handleFinaleSubmitResponse(socket, io));
-  socket.on('finale-next-question', () => finaleNextQuestion(data, socket, io));
+  socket.on('finale-next-question', () => finaleNextQuestion(socket, io));
   
   socket.on('disconnect', () => handleDisconnection(socket));
 });
