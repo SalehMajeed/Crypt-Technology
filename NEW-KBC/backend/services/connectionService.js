@@ -30,6 +30,8 @@ let initialFinaleState = {
   distributedQuestion: [],
   finalResults: null,
   questionIndex: 0,
+  submittedQuestion: null,
+  showResult: false,
 }
 
 const resetInitialState = (questions) => {
@@ -56,6 +58,8 @@ const resetFinaleInitialState = () => {
     finalResults: null,
     showOptions: false,
     questionIndex: 0,
+    submittedQuestion: null,
+    showResult: false,
   }
 };
 
@@ -84,15 +88,17 @@ const connectAsCandidate = (socket) => {
     console.log("Candidate limit reached");
     isConnected = false;
   } else {
-    connectedUser.push({ id: socket.id, role: "candidate" });
-    console.log("Candidate connected");
-  }
-  if (!isConnected) {
-    socket.emit("candidate-connection-failed", {
-      message: "Candidate limit reached",
-    });
-  } else {
-    socket.emit("candidate-connected", { initialState });
+    isConnected = connectedUser.some(eachClient => eachClient.id === socket.id);
+    if (!isConnected) {
+      connectedUser.push({ id: socket.id, role: "candidate" });
+      console.log(connectedUser);
+      console.log("Candidate connected");
+      socket.emit("candidate-connected", { initialState });
+    } else {
+      socket.emit("candidate-connection-failed", {
+        message: "Candidate limit reached",
+      });
+    }
   }
 };
 
@@ -267,17 +273,32 @@ const finaleStopTimer = (socket, io) => {
   io.emit("finale-timer-stop", initialFinaleState);
 };
 
+const finaleSubmitAns = (ans, io) => {
+  initialFinaleState = {
+    ...initialFinaleState,
+    submittedQuestion: ans,
+    startTimer: false,
+  };
+  io.emit("finale-submitted-ans", initialFinaleState);
+};
+
 const finaleSubmitResponse = (socket, io) => {
+  initialFinaleState = { ...initialFinaleState, showResult: true }
+  io.emit("finale-submit-question", initialFinaleState);
+}
+
+const finaleNextQuestion = (socket, io) => {
   initialFinaleState = {
     ...initialFinaleState,
     questionIndex: initialFinaleState.questionIndex + 1,
     startQuiz: false,
     startTimer: false,
     showOptions: false,
+    showResult: false,
+    submittedQuestion: null,
   };
-  io.emit("finale-quiz-submit", initialFinaleState);
+  io.emit("finale-next-question", initialFinaleState);
 };
-
 
 module.exports = {
   connectAsMaster,
@@ -299,5 +320,7 @@ module.exports = {
   finaleResetQuiz,
   finaleStartTimer,
   finaleStopTimer,
+  finaleSubmitAns,
   finaleSubmitResponse,
+  finaleNextQuestion,
 };

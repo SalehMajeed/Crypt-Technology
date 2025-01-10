@@ -2,7 +2,8 @@ const express = require('express');
 const http = require('http');
 require('dotenv').config();
 const socketIo = require('socket.io');
-const { handleConnection, handleDisconnection, handleStartQuiz, handleResetQuiz, handleStartTimer, handleStopTimer, handleSubmitResponse, handleFinaleStartQuiz, handleFinaleResetQuiz, handleFinaleStartTimer, handleFinaleStopTimer, handleFinaleSubmitResponse } = require('./controllers/connectionController');
+const { handleConnection, handleDisconnection, handleStartQuiz, handleResetQuiz, handleStartTimer, handleStopTimer, handleSubmitResponse, handleFinaleStartQuiz, handleFinaleResetQuiz, handleFinaleStartTimer, handleFinaleStopTimer, handleFinaleSubmitResponse, handleSubmitFinaleAns } = require('./controllers/connectionController');
+const { finaleNextQuestion } = require('./services/connectionService');
 
 const app = express();
 const server = http.createServer(app);
@@ -33,7 +34,9 @@ io.on('connection', (socket) => {
   socket.on('reset-finale-quiz', () => handleFinaleResetQuiz(socket, io));
   socket.on('start-finale-timer', () => handleFinaleStartTimer(socket, io));
   socket.on('stop-finale-timer', () => handleFinaleStopTimer(socket, io));
-  socket.on('submit-finale-response', (data) => handleFinaleSubmitResponse(data, io));
+  socket.on('submit-finale-ans', (data) => handleSubmitFinaleAns(data, io));
+  socket.on('submit-finale-response', () => handleFinaleSubmitResponse(socket, io));
+  socket.on('finale-next-question', () => finaleNextQuestion(data, socket, io));
   
   socket.on('disconnect', () => handleDisconnection(socket));
 });

@@ -41,8 +41,6 @@ export const Question = styled.p`
   color: white;
 `;
 
-
-
 export const CardWrapper = styled.div`
   height: 100vh;
   width: 100%;

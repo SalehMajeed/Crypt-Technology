@@ -72,10 +72,22 @@ export const SocketProvider = ({ children }) => {
     });
 
     newSocket.on('finale-quiz-submit', (data) => {
-      console.log(data);
       setData(data);
     });
 
+    newSocket.on('finale-submitted-ans', (data) => {
+      console.log('inside finale submitted');
+      setData(data);
+    });
+
+    newSocket.on('finale-submit-question', (data) => {
+      setData(data);
+    });
+
+    newSocket.on('finale-next-question', (data) => {
+      setData(data);
+    });
+    
     return () => {
       if (newSocket) {
         newSocket.disconnect();
