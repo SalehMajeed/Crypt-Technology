@@ -58,6 +58,12 @@ function FinaleHost() {
     };
   }, [data, socket]);
 
+  const handleSubmitClick = (selectedAns) => {
+    socket.emit("submit-finale-ans", {
+      userAns: selectedAns,
+    });
+  };
+
   const moneyList = [
     { id: "1)", amount: "Rs. 500" },
     { id: "2)", amount: "Rs. 1,000" },
@@ -84,14 +90,27 @@ function FinaleHost() {
                 <div className="options">
                   {Object.values(data.distributedQuestion[data.questionIndex].options).map((el, index) => (
                     <Button
-                      key={index}
-                      className={
-                        `${data.submittedQuestion === el ? "incorrect" : ""} 
-                        ${data.showResult && data.distributedQuestion[data.questionIndex]?.correctAnswer === el ? "correct" : ""}`
-                      }
-                    >
-                      {el}
-                    </Button>
+                          key={index}
+                          onClick={() => handleSubmitClick(el)}
+                          className={`${
+                            data.submittedQuestion === el
+                              ? data.showResult
+                                ? data.distributedQuestion[data.questionIndex]
+                                    ?.correctAnswer === el
+                                  ? "correct" 
+                                  : "incorrect" 
+                                : "selected"
+                              : ""
+                          } ${
+                            data.showResult &&
+                            data.distributedQuestion[data.questionIndex]
+                              ?.correctAnswer === el
+                              ? "correct" 
+                              : ""
+                          }`}
+                        >
+                          {el}
+                        </Button>
                   ))}
                 </div>
               ) : (

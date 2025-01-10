@@ -13,7 +13,6 @@ import {
   Footer,
 } from "../FinaleCandidate/FinaleCandidate.style.jsx";
 import SocketContext from "../../contexts/SocketContext.js";
-const timerSound = new Audio("../assets/tick-sound.mp3");
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
@@ -66,7 +65,7 @@ function FinaleHost() {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [data, socket]);
+  }, [ data, socket]);
 
   const handleStartQuiz = () => {
     socket.emit("start-finale-quiz");
@@ -87,12 +86,6 @@ function FinaleHost() {
 
   const handleStopTimer = () => {
     socket.emit("stop-finale-timer");
-  };
-
-  const handleSubmitClick = (selectedAns) => {
-    socket.emit("submit-finale-ans", {
-      userAns: selectedAns,
-    });
   };
 
   const handleSubmitResponse = () => {
@@ -150,29 +143,35 @@ function FinaleHost() {
                     "Loading question..."}
                 </p>
                 {data.showOptions &&
-                data.distributedQuestion[data.questionIndex].options && (
-                  <div className="options">
-                    {Object.values(
-                      data.distributedQuestion[data.questionIndex].options
-                    ).map((el, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => handleSubmitClick(el)}
-                        className={`${
-                          data.submittedQuestion === el ? "incorrect" : ""
-                        } ${
-                          data.showResult &&
-                          data.distributedQuestion[data.questionIndex]
-                            ?.correctAnswer === el
-                            ? "correct"
-                            : ""
-                        }`}
-                      >
-                        {el}
-                      </Button>
-                    ))}
-                  </div>
-                )}
+                  data.distributedQuestion[data.questionIndex].options && (
+                    <div className="options">
+                      {Object.values(
+                        data.distributedQuestion[data.questionIndex].options
+                      ).map((el, index) => (
+                        <Button
+                          key={index}
+                          className={`${
+                            data.submittedQuestion === el
+                              ? data.showResult
+                                ? data.distributedQuestion[data.questionIndex]
+                                    ?.correctAnswer === el
+                                  ? "correct" 
+                                  : "incorrect" 
+                                : "selected"
+                              : ""
+                          } ${
+                            data.showResult &&
+                            data.distributedQuestion[data.questionIndex]
+                              ?.correctAnswer === el
+                              ? "correct" 
+                              : ""
+                          }`}
+                        >
+                          {el}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
               </div>
             ) : (
               <div>Loading</div>
