@@ -97,13 +97,22 @@ function FinaleHost() {
                     }
                     return (<Button
                       key={index}
-                      className={`${data.submittedQuestion === el ? "incorrect" : ""
-                        } ${data.showResult &&
-                          data.distributedQuestion[data.questionIndex]
-                            ?.correctAnswer === el
-                          ? "correct"
-                          : ""
-                        }`}
+                      className={`${
+                            data.submittedQuestion === el
+                              ? data.showResult
+                                ? data.distributedQuestion[data.questionIndex]
+                                    ?.correctAnswer === el
+                                  ? "correct" 
+                                  : "incorrect" 
+                                : "selected"
+                              : ""
+                          } ${
+                            data.showResult &&
+                            data.distributedQuestion[data.questionIndex]
+                              ?.correctAnswer === el
+                              ? "correct" 
+                              : ""
+                          }`}
                     >
                       {el}
                     </Button>)
