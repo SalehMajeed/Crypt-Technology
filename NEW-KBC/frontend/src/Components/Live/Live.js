@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
-import useSound from "use-sound";
-import playSound from "../assets/play.mp3";
 import {
   Container,
   Pera,
@@ -18,7 +16,6 @@ const Live = () => {
   const [timer, setTimer] = useState(30);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
-  const [play, { stop }] = useSound(playSound);
 
   useEffect(() => {
     if (socket) {
@@ -48,17 +45,6 @@ const Live = () => {
     };
   }, [data]);
 
-  useEffect(() => {
-    if (data?.startQuiz) {
-      play();
-      const soundTimer = setTimeout(() => {
-        stop();
-      }, 3000);
-      return () => {
-        clearTimeout(soundTimer);
-      };
-    }
-  }, [data?.startQuiz, play, stop]);
 
   const distributedQuestion = data?.distributedQuestion;
 
