@@ -51,12 +51,13 @@ export const CardWrapper = styled.div`
 
   .options {
     display: grid;
+    grid-gap : -10px;
     place-items: center;
-    grid-template-columns: 1fr 1fr;
-    margin: 30px auto;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 90px auto;
     text-align: center;
     justify-content: center;
-    width: 100%;
+    width: 82%;
   }
 
   .submitBtnDiv {
