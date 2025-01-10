@@ -88,15 +88,17 @@ const connectAsCandidate = (socket) => {
     console.log("Candidate limit reached");
     isConnected = false;
   } else {
-    connectedUser.push({ id: socket.id, role: "candidate" });
-    console.log("Candidate connected");
-  }
-  if (!isConnected) {
-    socket.emit("candidate-connection-failed", {
-      message: "Candidate limit reached",
-    });
-  } else {
-    socket.emit("candidate-connected", { initialState });
+    isConnected = connectedUser.some(eachClient => eachClient.id === socket.id);
+    if (!isConnected) {
+      connectedUser.push({ id: socket.id, role: "candidate" });
+      console.log(connectedUser);
+      console.log("Candidate connected");
+      socket.emit("candidate-connected", { initialState });
+    } else {
+      socket.emit("candidate-connection-failed", {
+        message: "Candidate limit reached",
+      });
+    }
   }
 };
 
@@ -272,11 +274,11 @@ const finaleStopTimer = (socket, io) => {
 };
 
 const finaleSubmitAns = (ans, io) => {
-  initialFinaleState = { 
+  initialFinaleState = {
     ...initialFinaleState,
-     submittedQuestion: ans,
-     startTimer: false,
-     };
+    submittedQuestion: ans,
+    startTimer: false,
+  };
   io.emit("finale-submitted-ans", initialFinaleState);
 };
 

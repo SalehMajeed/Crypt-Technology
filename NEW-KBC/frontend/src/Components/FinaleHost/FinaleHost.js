@@ -86,13 +86,13 @@ function FinaleHost() {
   }
 
   const moneyList = [
-    { id: "1)", amount: "Rs. 500" },
-    { id: "2)", amount: "Rs. 1,000" },
-    { id: "3)", amount: "Rs. 2,000" },
-    { id: "4)", amount: "Rs. 4,000" },
-    { id: "5)", amount: "Rs. 7,000" },
-    { id: "6)", amount: "Rs. 15,000" },
-    { id: "7)", amount: "Rs. 21,000" },
+    { squenceId:1,id: "1)", amount: "Rs. 500" },
+    { squenceId:2,id: "2)", amount: "Rs. 1,000" },
+    { squenceId:3,id: "3)", amount: "Rs. 2,000" },
+    { squenceId:4,id: "4)", amount: "Rs. 4,000" },
+    { squenceId:5,id: "5)", amount: "Rs. 7,000" },
+    { squenceId:6,id: "6)", amount: "Rs. 15,000" },
+    { squenceId:7,id: "7)", amount: "Rs. 21,000" },
   ].reverse();
 
   return (
@@ -167,7 +167,7 @@ function FinaleHost() {
             {moneyList.map((el, index) => {
               return (
                 <React.Fragment key={index}>
-                  <li>
+                  <li style={{ backgroundColor: `${(data?.questionIndex + 1) === (el.squenceId) ? "black" : ""} ` }}>
                     <span className="indexOfPrice">{el.id}</span>
                     <span className="price">{el.amount}</span>
                   </li>
