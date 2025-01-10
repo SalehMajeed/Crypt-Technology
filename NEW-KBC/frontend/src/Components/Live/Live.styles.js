@@ -175,6 +175,31 @@ export const CardWrapper = styled.div`
   text-align: center;
   font-size: 1.8rem;
 
+  .winner {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background-color: green; 
+    width:max-content;
+  }
+
+  .winner li{
+    background-color: green; 
+    width:max-content;
+  }
+
+  .looser {
+    display:flex;
+    justify-content:center;
+    background-color: red; 
+    width:max-content;
+  }
+
+  .looser li {
+    background-color: red; 
+    width:max-content;
+  }
+
   .options {
     display: grid;
     place-items: center;

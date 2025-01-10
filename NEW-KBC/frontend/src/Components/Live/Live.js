@@ -85,7 +85,7 @@ const Live = () => {
                     <ul>
                       {data.finalResults.map((eachResult, index) => (
                         <li key={index}>
-                          <ul color={eachResult.isWinner ? "green" : "red"}>
+                          <ul className={eachResult.isWinner ? "winner" : "looser"}>
                             <li>{eachResult.userId}</li>
                             <li>
                               {(eachResult.time / 1000).toFixed(3)} Seconds
