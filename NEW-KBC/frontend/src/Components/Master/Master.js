@@ -1,6 +1,9 @@
 import { useContext, useEffect } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import { Container, Button, Pera, CardWrapper } from "./Master.styles";
+import resetTimeSound from '../assets/start.mp3';
+
+const startSound = new Audio(resetTimeSound);
 
 const Master = () => {
   const { socket, data } = useContext(SocketContext);
@@ -16,6 +19,7 @@ const Master = () => {
   };
 
   const handleResetQuiz = () => {
+    startSound.play();
     socket.emit("reset-quiz");
   };
 
@@ -27,12 +31,16 @@ const Master = () => {
     socket.emit("stop-timer");
   };
 
+  const handleStartTheme = () => {
+    startSound.play()
+  }
+
   return (
     <Container>
       {socket && socket.connected ? (
         <CardWrapper>
           <Pera>Master-Role</Pera>
-          <Button>Start Theme song</Button>
+          <Button onClick={handleStartTheme}>Start Theme song</Button>
           <Button onClick={handleResetQuiz}>Reset Quiz</Button>
           <Button onClick={handleStartQuiz}>Start Quiz</Button>
           <Button onClick={handleStartTimer}>Start Timer</Button>

@@ -122,7 +122,13 @@ const Live = () => {
             )}
           </div>
         ) : (
-          <Pera>Loading..</Pera>
+          <Pera style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+            <img
+              src="./KBC_Logo.jpg"
+              alt="Loading..."
+              style={{ width: "250px", height: "auto", mixBlendMode : 'color-dodge' }}
+            />
+          </Pera>
         )}
       </CardWrapper>
     </Container>

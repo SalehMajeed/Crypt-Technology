@@ -76,64 +76,70 @@ const Candidate = () => {
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
             {/* <div className="quizElements"> */}
-              {/* <Pera>Candidate</Pera> */}
-              {data.waitForMaster ? (
-                <Pera>Waiting for the Master...</Pera>
-              ) : (
-                <div className="optionsDiv">
-                  {data.startTimer ? (
-                    <Header>
-                      <TimerCircle>
-                        <h2>{timer}</h2>
-                      </TimerCircle>
-                    </Header>
-                  ) : (
-                    ""
-                  )}
-                  {data.finalResults ? <div>
-                    <ul>
-                      {data.finalResults.map((eachResult, index) => <li key={index}>{
-                        <ul color={eachResult.isWinner ? 'green' : 'red'}>
-                          <li>{eachResult.joinId}</li>
-                          <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
-                        </ul>
-                      }</li>)}
-                    </ul>
-                  </div> : <div>
-                    <Question>{distributedQuestion.question}</Question>
-                    <div>
-                      {data.startTimer ? (
-                        <>
-                          <div className="options">
-                            {Object.entries(distributedQuestion.options).map(
-                              ([key, value]) => (
-                                <Button
-                                  key={key}
-                                  onClick={() => {
-                                    setSelectedAnswers(prevState => [...prevState, { id: key, value }]);
-                                  }
-                                  }
-                                  disabled={selectedAnswers.some(eachAns => eachAns.id === key)}
-                                >
-                                  <span>{`${key})`}</span>
-                                  {value}
-                                </Button>
-                              )
-                            )}
-                          </div>
-                        </>
-                      ) : (
-                        <div>Please wait for the timer to start...</div>
-                      )}
-                    </div>
-                  </div>}
+            {/* <Pera>Candidate</Pera> */}
+            {data.waitForMaster ? (
+              <Pera>Waiting for the Master...</Pera>
+            ) : (
+              <div className="optionsDiv">
+                {data.startTimer ? (
+                  <Header>
+                    <TimerCircle>
+                      <h2>{timer}</h2>
+                    </TimerCircle>
+                  </Header>
+                ) : (
+                  ""
+                )}
+                {data.finalResults ? <div>
+                  <ul>
+                    {data.finalResults.map((eachResult, index) => <li key={index}>{
+                      <ul color={eachResult.isWinner ? 'green' : 'red'}>
+                        <li>{eachResult.joinId}</li>
+                        <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
+                      </ul>
+                    }</li>)}
+                  </ul>
+                </div> : <div>
+                  <Question>{distributedQuestion.question}</Question>
+                  <div>
+                    {data.startTimer ? (
+                      <>
+                        <div className="options">
+                          {Object.entries(distributedQuestion.options).map(
+                            ([key, value]) => (
+                              <Button
+                                key={key}
+                                onClick={() => {
+                                  setSelectedAnswers(prevState => [...prevState, { id: key, value }]);
+                                }
+                                }
+                                disabled={selectedAnswers.some(eachAns => eachAns.id === key)}
+                              >
+                                <span>{`${key})`}</span>
+                                {value}
+                              </Button>
+                            )
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <div>Please wait for the timer to start...</div>
+                    )}
+                  </div>
+                </div>}
 
-                </div>
-              )}
+              </div>
+            )}
             {/* </div> */}
           </div>
         ) : (
-          <Pera>Loading...</Pera>
+          <Pera style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+            <img
+              src="./KBC_Logo.jpg"
+              alt="Loading..."
+              style={{ width: "250px", height: "auto" }}
+            />
+          </Pera>
         )}
       </CardWrapper>
     </Container>
