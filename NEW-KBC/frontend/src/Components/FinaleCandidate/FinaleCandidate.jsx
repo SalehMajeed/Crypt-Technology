@@ -14,7 +14,7 @@ import {
   Footer,
 } from "../FinaleCandidate/FinaleCandidate.style.jsx";
 import SocketContext from "../../contexts/SocketContext.js";
-const timerSound = new Audio("path-to-your-15s-sound.mp3");
+const timerSound = new Audio("../assets/tick-sound.mp3");
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
@@ -86,8 +86,8 @@ function FinaleHost() {
                     <Button
                       key={index}
                       className={
-                        `${data.submittedQuestion === el ? "selected" : ""} 
-                        ${data.showResult && data.distributedQuestion[data.questionIndex]?.correctAnswer === el ? "selected" : ""}`
+                        `${data.submittedQuestion === el ? "incorrect" : ""} 
+                        ${data.showResult && data.distributedQuestion[data.questionIndex]?.correctAnswer === el ? "correct" : ""}`
                       }
                     >
                       {el}

@@ -179,10 +179,11 @@ export const CardWrapper = styled.div`
     display: grid;
     place-items: center;
     grid-template-columns: 1fr 1fr;
-    margin: 30px auto 0;
+    margin: 90px auto 0;
     padding: 10px;
     text-align: center;
     justify-content: center;
+    width : 90%;
   }
 
   .submitBtnDiv {

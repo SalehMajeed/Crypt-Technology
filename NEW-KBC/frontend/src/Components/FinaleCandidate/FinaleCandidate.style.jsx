@@ -50,6 +50,27 @@ export const CardWrapper = styled.div`
   text-align: center;
   font-size: 1.8rem;
 
+  .used-lifeline {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .used-lifeline img {
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 2px solid red;
+    border-radius: 50%;
+  }
+
+  .used-lifeline img::after {
+    content: "✖"; /* Cross mark */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: red;
+  }
+
   .options {
     display: grid;
     place-items: center;
@@ -59,13 +80,12 @@ export const CardWrapper = styled.div`
     text-align: center;
     justify-content: center;
     width: 100%;
-    ${'' /* grid-gap: 20px; */}
+    ${"" /* grid-gap: 20px; */}
   }
 
   .submitBtnDiv {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .answers {
@@ -180,8 +200,7 @@ export const CardWrapper = styled.div`
 
 export const Button = styled.button`
   display: flex;
-  ${"" /* grid-gap:10px; */}
-  justify-content:space-around;
+  justify-content: space-around;
   background: linear-gradient(#100241, #000);
   border: 2px solid #ffa800;
   border-radius: 35px;
@@ -192,7 +211,7 @@ export const Button = styled.button`
   margin: 10px;
   text-align: center;
   width: 90%;
-  min-width:max-content;
+  min-width: max-content;
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -203,6 +222,16 @@ export const Button = styled.button`
 
   &.selected {
     background: lightblue;
+    color: black;
+  }
+
+  &.incorrect {
+    background: red;
+    color: black;
+  }
+
+  &.correct {
+    background: green;
     color: black;
   }
 
@@ -230,6 +259,7 @@ export const Header = styled.div`
 `;
 
 export const TimerCircle = styled.div`
+  margin-top: 60px;
   background-color: #121212;
   border: 2px solid #ffa800;
   border-radius: 50%;

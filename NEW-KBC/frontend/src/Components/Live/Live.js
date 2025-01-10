@@ -67,7 +67,6 @@ const Live = () => {
       <CardWrapper>
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
-            <Pera>Live</Pera>
             {data.waitForMaster ? (
               <Pera>Waiting for the Master...</Pera>
             ) : (
