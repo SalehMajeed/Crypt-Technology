@@ -21,18 +21,18 @@ function FinaleHost() {
   const indexRef = useRef(null);
 
   const moneyList = [
-    { squenceId: 1, id: "1)", timer:30,amount: "Rs. 500" },
-    { squenceId: 2, id: "2)", timer:30,amount: "Rs. 1,000" },
-    { squenceId: 3, id: "3)", timer:30,amount: "Rs. 2,000" },
-    { squenceId: 4, id: "4)", timer:45,amount: "Rs. 4,000" },
-    { squenceId: 5, id: "5)", timer:45,amount: "Rs. 7,000" },
-    { squenceId: 6, id: "6)", timer:60,amount: "Rs. 15,000" },
-    { squenceId: 7, id: "7)", timer:60,amount: "Rs. 21,000" },
+    { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
+    { squenceId: 2, id: "2)", timer: 30, amount: "Rs. 1,000" },
+    { squenceId: 3, id: "3)", timer: 30, amount: "Rs. 2,000" },
+    { squenceId: 4, id: "4)", timer: 45, amount: "Rs. 4,000" },
+    { squenceId: 5, id: "5)", timer: 45, amount: "Rs. 8,000" },
+    { squenceId: 6, id: "6)", timer: 60, amount: "Rs. 15,000" },
+    { squenceId: 7, id: "7)", timer: 60, amount: "Rs. 21,000" },
   ].reverse();
 
   if (data && indexRef.current !== data?.questionIndex) {
-    const currentIndex = data.questionIndex
-    setTimer(moneyList[currentIndex].timer);
+    const currentIndex = 6 - data.questionIndex
+    setTimer(moneyList[currentIndex]?.timer);
     indexRef.current = data.questionIndex;
   }
 
@@ -135,14 +135,13 @@ function FinaleHost() {
                       {Object.keys(
                         data.distributedQuestion[data.questionIndex].options
                       ).map((currentKey, index) => {
-                        console.log(data.startTimer);
                         let el = data.distributedQuestion[data.questionIndex].options[currentKey];
-                        if(
-                          data.startTimer === false && 
+                        if (
+                          data.startTimer === false &&
                           data.lifeLine.fiftyOnce &&
                           data.lifeLine.fifty === false &&
-                          (currentKey in data.distributedQuestion[data.questionIndex].fifty)) {
-                            console.log(data.lifeLine.fiftyOnce)
+                          Object.keys(data.distributedQuestion[data.questionIndex].fifty || {}).includes(currentKey)) {
+                          console.log(data.lifeLine.fiftyOnce)
                           el = "50/50";
                         }
                         return (<Button
@@ -190,16 +189,17 @@ function FinaleHost() {
                     onClick={() => handleStopTimer("audiencePaul")}
                   />
                 </span>
-                <span
-                  className={`lifeline ${data.lifeLine?.askExpert ? "" : "used-lifeline"
-                    }`}
-                >
-                  <img
-                    src={expertLifeLine}
-                    alt="expertLifeLine"
-                    onClick={() => handleStopTimer("askExpert")}
-                  />
-                </span>
+                {data.questionIndex === 3 &&
+                  <span
+                    className={`lifeline ${data.lifeLine?.askExpert ? "" : "used-lifeline"
+                      }`}
+                  >
+                    <img
+                      src={expertLifeLine}
+                      alt="expertLifeLine"
+                      onClick={() => handleStopTimer("askExpert")}
+                    />
+                  </span>}
               </div>
               {moneyList.map((el, index) => {
                 return (
