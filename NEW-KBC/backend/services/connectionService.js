@@ -89,7 +89,20 @@ const connectAsMaster = async (socket) => {
   console.log("Master connected");
   const response = await axios("http://localhost:3002/questions");
   data = response.data;
-  const globalQuestions = data;
+  const globalQuestions = data.map(eachQuestion => {
+    return ({
+      id: eachQuestion.id,
+      question: eachQuestion.question,
+      options: {
+        a: eachQuestion.a,
+        b: eachQuestion.b,
+        c: eachQuestion.c,
+        d: eachQuestion.d,
+      },
+      correctAnswer: eachQuestion.correctAnswer 
+    })
+  });
+
   const distributedQuestion = globalQuestions[initialFinaleState.questionIndex];
   initialState = { ...initialState, waitForMaster: false, globalQuestions, distributedQuestion };
   socket.emit("master-connected", {
@@ -198,7 +211,7 @@ const checkForWinner = (arr) => {
 
 const submitResponse = (data, io) => {
   const { userId, joinId, time, ans = [] } = data;
-  const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
+  const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.id.trim()], []).join(',');
   const rightAns = initialState.distributedQuestion.correctAnswer;
   const finalResponse = {
     userId,
@@ -218,6 +231,7 @@ const submitResponse = (data, io) => {
       responseTimes[getWinner].isWinner = true;
     }
     const finalResults = responseTimes;
+    console.log(finalResults);
     const startTime = null;
     const startTimer = false;
     initialState = { ...initialState, startTime, startTimer, finalResults }

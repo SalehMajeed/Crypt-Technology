@@ -56,7 +56,6 @@ function FinaleHost() {
 
   useEffect(() => {
     if (socket) {
-      console.log({candidateType, indexSet});
       socket.emit("connect-finale-master", {candidateType, indexSet});
     }
   }, [socket]);
@@ -186,6 +185,7 @@ function FinaleHost() {
                       {Object.keys(
                         data.distributedQuestion[data.questionIndex].options
                       ).map((currentKey, index) => {
+                        console.log(index);
                         let el =
                           data.distributedQuestion[data.questionIndex].options[
                           currentKey
@@ -200,7 +200,7 @@ function FinaleHost() {
                           ).includes(currentKey)
                         ) {
                           console.log(data?.lifeLine?.fiftyOnce);
-                          el = "50/50";
+                          el = "-";
                         }
                         return (
                           <Button
