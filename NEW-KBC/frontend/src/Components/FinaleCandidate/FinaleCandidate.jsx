@@ -149,10 +149,12 @@ function FinaleHost() {
           </div>
           <div className="sideBar">
             <div className="lifeLine">
-              <span>
+              <span className={`lifeline ${data?.lifeLine?.fifty ? "" : "used-lifeline"
+                }`}>
                 <img src={fiftyFiftyImg} alt="fifty_fifty.png" />
               </span>
-              <span>
+              <span className={`lifeline ${data?.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                }`}>
                 <img src={audiencePoll} alt="audience-poll" />
               </span>
               {data?.questionIndex === 3 && (

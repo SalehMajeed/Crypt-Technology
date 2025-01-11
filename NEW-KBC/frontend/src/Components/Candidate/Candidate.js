@@ -13,7 +13,7 @@ import {
 
 const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
-  const [timer, setTimer] = useState(15);
+  const [timer, setTimer] = useState(30);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [searchParams] = useSearchParams();
@@ -55,7 +55,7 @@ const Candidate = () => {
   }, [data, socket]);
 
   useEffect(() => {
-    setTimer(5);
+    setTimer(30);
     setSelectedAnswers([]);
   }, [data?.finalResults]);
 

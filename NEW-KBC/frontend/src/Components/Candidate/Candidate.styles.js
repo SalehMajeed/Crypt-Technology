@@ -13,7 +13,7 @@ export const Question = styled.p`
   background: linear-gradient(#100241, #000);
   border: 1px solid #ffa800;
   border-radius: 35px;
-  font-size: 15px;
+  font-size: 30px;
   padding: 20px;
   text-align: center;
   width: 80%;
@@ -47,7 +47,7 @@ export const CardWrapper = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: white;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2rem;
 
   .options {
     display: grid;
@@ -175,7 +175,7 @@ export const Button = styled.button`
   border: 2px solid #ffa800;
   border-radius: 35px;
   color: white;
-  font-weight: 300;
+  font-weight : 100;
   padding: 10px;
   margin: 10px;
   text-align: center;

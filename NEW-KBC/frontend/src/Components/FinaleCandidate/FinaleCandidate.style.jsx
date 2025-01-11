@@ -8,8 +8,7 @@ export const Container = styled.div`
     url(https://images.news18.com/ibnlive/uploads/2021/08/whatsapp-image-2021-08-24-at-08.55.58-e1629793241775.jpeg)
       no-repeat center center;
   background-size: cover;
-  display: flex;
-  flex-direction: column;
+  ${'' /* flex-direction: column; */}
   width: 75%;
   align-items: center;
   background-color: #000;
@@ -32,12 +31,12 @@ export const Question = styled.p`
   background: linear-gradient(#100241, #000);
   border: 1px solid #ffa800;
   border-radius: 35px;
-  font-size: 15px;
+  ${'' /* font-size: 15px; */}
   padding: 20px;
   text-align: center;
   width: 80%;
   margin: 0 auto;
-  font-size: 1.8rem;
+  ${'' /* font-size: 1.8rem; */}
   color: white;
 `;
 
@@ -48,7 +47,27 @@ export const CardWrapper = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: white;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2.5rem;
+
+  .dropDown{
+    background: linear-gradient(#100241, #000);
+    border: 1px solid #ffa800;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px auto 0;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    width: 250px;
+    font-weight: 400;
+    color: white;
+    &:hover {
+      background: #000;
+      transform: scale(1.05);
+    }
+  }
 
   .used-lifeline {
     opacity: 0.5;
@@ -76,11 +95,9 @@ export const CardWrapper = styled.div`
     place-items: center;
     grid-template-columns: 1fr 1fr;
     margin: 30px auto;
-    ${"" /* padding: 10px; */}
     text-align: center;
     justify-content: center;
     width: 100%;
-    ${"" /* grid-gap: 20px; */}
   }
 
   .submitBtnDiv {
@@ -111,7 +128,7 @@ export const CardWrapper = styled.div`
     height: 100vh;
   }
   .quizElements {
-    margin-top: 50px;
+    ${'' /* margin-top: 50px; */}
     justify-content: center;
     align-items: center;
     background: linear-gradient(180deg, #0000, #020230),
@@ -130,12 +147,12 @@ export const CardWrapper = styled.div`
     border-bottom: 1px solid #ffa800;
     justify-content: space-between;
     background: #020230;
-    padding: 8px;
+    padding: 4px;
     color: white;
     text-align: center;
     font-size: 1.7rem;
     font-weight: 400;
-    margin: 10px;
+    margin: 8px;
   }
 
   li:hover {
@@ -162,13 +179,12 @@ export const CardWrapper = styled.div`
 
   img {
     height: 80px;
-    height: 80px;
   }
 
   p {
     background: linear-gradient(#100241, #000);
     border: 1px solid #ffa800;
-    border-radius: 35px;
+    border-radius: 45px;
     font-size: 15px;
     padding: 20px;
     text-align: center;
@@ -205,7 +221,6 @@ export const Button = styled.button`
   border: 2px solid #ffa800;
   border-radius: 35px;
   color: white;
-  ${"" /* font-weight: 400; */}
   font-weight: 300;
   padding: 10px;
   margin: 10px;
