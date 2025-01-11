@@ -16,12 +16,14 @@ let initialState = {
   startTimer: false,
   startQuiz: false,
   distributedQuestion: [],
-  finalResults: null
+  finalResults: null,
+  questionIndex: 0
 };
 
 let finaleUsers = [];
 
 let initialFinaleState = {
+  hasReset: false,
   waitForMaster: true,
   startTime: null,
   startTimer: false,
@@ -32,7 +34,7 @@ let initialFinaleState = {
   questionIndex: 0,
   submittedQuestion: null,
   showResult: false,
-  lifeLine:{
+  lifeLine: {
     fifty: true,
     fiftyOnce: false,
     audiencePaul: true,
@@ -48,7 +50,9 @@ const resetInitialState = (questions) => {
     startQuiz: false,
     showOptions: false,
     distributedQuestion: questions,
-    finalResults: null
+    finalResults: null,
+    globalQuestions: initialState.globalQuestions,
+    questionIndex: initialState.questionIndex + 1,
   };
   timer = null;
   responseTimes = [];
@@ -56,6 +60,7 @@ const resetInitialState = (questions) => {
 
 const resetFinaleInitialState = () => {
   initialFinaleState = {
+    hasReset: false,
     ...initialFinaleState,
     waitForMaster: true,
     startTime: null,
@@ -66,7 +71,7 @@ const resetFinaleInitialState = () => {
     questionIndex: 0,
     submittedQuestion: null,
     showResult: false,
-    lifeLine:{
+    lifeLine: {
       fifty: true,
       fiftyOnce: false,
       audiencePaul: true,
@@ -84,8 +89,9 @@ const connectAsMaster = async (socket) => {
   console.log("Master connected");
   const response = await axios("http://localhost:3002/questions");
   data = response.data;
-  const distributedQuestion = data[0];
-  initialState = { ...initialState, waitForMaster: false, distributedQuestion };
+  const globalQuestions = data;
+  const distributedQuestion = globalQuestions[initialFinaleState.questionIndex];
+  initialState = { ...initialState, waitForMaster: false, globalQuestions, distributedQuestion };
   socket.emit("master-connected", {
     message: "Connected as Master",
     initialState,
@@ -156,6 +162,8 @@ const startQuiz = (socket, io) => {
 
 const resetQuiz = (socket, io) => {
   resetInitialState(initialState.distributedQuestion);
+  const distributedQuestion = initialState.globalQuestions[initialState.questionIndex];
+  initialState = { ...initialState, distributedQuestion };
   io.emit("quiz-reset", initialState);
 };
 
@@ -191,8 +199,7 @@ const checkForWinner = (arr) => {
 const submitResponse = (data, io) => {
   const { userId, joinId, time, ans = [] } = data;
   const finalAns = ans.reduce((acc, eachAns) => acc = [...acc, eachAns.value.trim()], []).join(',');
-  // const rightAns = initialState.distributedQuestion.correctAnswer;
-  const rightAns = 'Mahatma Gandhi,Jawaharlal Nehru,B. R. Ambedkar,Sardar Patel';
+  const rightAns = initialState.distributedQuestion.correctAnswer;
   const finalResponse = {
     userId,
     joinId,
@@ -202,7 +209,7 @@ const submitResponse = (data, io) => {
     isWinner: false,
   };
   const doesUserSubmitted = responseTimes.some(eachTime => eachTime.userId === finalResponse.userId);
-  if(!doesUserSubmitted) {
+  if (!doesUserSubmitted) {
     responseTimes = [...responseTimes, finalResponse];
   }
   if (responseTimes.length >= process.env.USER_LIMIT) {
@@ -239,14 +246,75 @@ const getRoleCount = (role) => {
   }, 0);
 };
 
-const connectAsFinaleMaster = async (socket) => {
+const updateFinaleQuestion = async (candidateType, indexSet) => {
+  const response = await axios("http://localhost:3002/finaleQuestions");
+  data = response.data;
+  const lifeLine = {
+    "fifty": true,
+    "fiftyOnce": false,
+    "audiencePaul": true,
+    "askExpert": true
+  };
+  const distributedQuestion = data[candidateType][indexSet];
+  initialFinaleState = {
+    ...initialFinaleState,
+    waitForMaster: false,
+    distributedQuestion,
+    lifeLine,
+    questionIndex: 0
+  };
+}
+
+const connectAsFinaleMaster = async (socket, data) => {
+  const { candidateType, indexSet } = data;
   console.log("Finale Master connected");
   finaleMaster = socket.id;
   finaleUsers.push({ id: socket.id, role: "finale-master" });
-  const response = await axios("http://localhost:3002/questions");
+  const response = await axios("http://localhost:3002/finaleQuestions");
   data = response.data;
-  const distributedQuestion = data;
-  initialFinaleState = { ...initialFinaleState, waitForMaster: false, distributedQuestion };
+  const distributedQuestion = data[candidateType][indexSet].map(eachQuestion => {
+    const fifty = {};
+    if (eachQuestion.a1 === "FALSE") {
+      fifty.a = true;
+    }
+
+    if (eachQuestion.b1 === "FALSE") {
+      fifty.b = true;
+    }
+
+    if (eachQuestion.c1 === "FALSE") {
+      fifty.c = true;
+    }
+
+    if (eachQuestion.d1 === "FALSE") {
+      fifty.d = true;
+    }
+    return ({
+      id: eachQuestion.id,
+      question: eachQuestion.question,
+      options: {
+        a: eachQuestion.a,
+        b: eachQuestion.b,
+        c: eachQuestion.c,
+        d: eachQuestion.d
+      },
+      correctAnswer: eachQuestion.correctAnswer,
+      fifty: fifty
+    })
+  });
+  const lifeLine = {
+    "fifty": true,
+    "fiftyOnce": false,
+    "audiencePaul": true,
+    "askExpert": true
+  };
+  initialFinaleState = {
+    ...initialFinaleState,
+    waitForMaster: false,
+    distributedQuestion,
+    lifeLine,
+    questionIndex: 0
+  };
   socket.emit("finale-master-connected", initialFinaleState)
 };
 
@@ -274,8 +342,11 @@ const finaleStartQuiz = (socket, io) => {
   io.emit("finale-quiz-started", initialFinaleState);
 };
 
-const finaleResetQuiz = (socket, io) => {
+const finaleResetQuiz = (data, socket, io) => {
   resetFinaleInitialState();
+  if (data?.shouldUpdate) {
+    updateFinaleQuestion(data.candidateType, data.indexSet);
+  }
   io.emit("finale-quiz-reset", initialFinaleState);
 };
 
@@ -285,12 +356,12 @@ const finaleStartTimer = (socket, io) => {
 };
 
 const finaleStopTimer = (data, socket, io) => {
-  const {lifeline} = data;
-  if(lifeline === 'fifty') {
-    initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, fiftyOnce:true};
+  const { lifeline } = data;
+  if (lifeline === 'fifty') {
+    initialFinaleState.lifeLine = { ...initialFinaleState.lifeLine, fiftyOnce: true };
   }
-  initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, [lifeline]:false},
-  initialFinaleState.lifeLine = {...initialFinaleState.lifeLine, lifeLine: initialFinaleState.lifeLine};
+  initialFinaleState.lifeLine = { ...initialFinaleState.lifeLine, [lifeline]: false },
+    initialFinaleState.lifeLine = { ...initialFinaleState.lifeLine, lifeLine: initialFinaleState.lifeLine };
   initialFinaleState = { ...initialFinaleState, startTimer: false, showOptions: true, };
   io.emit("finale-timer-stop", initialFinaleState);
 };
@@ -318,7 +389,7 @@ const finaleNextQuestion = (socket, io) => {
     showOptions: false,
     showResult: false,
     submittedQuestion: null,
-    lifeLine:{
+    lifeLine: {
       ...initialFinaleState.lifeLine,
       fiftyOnce: false,
     }

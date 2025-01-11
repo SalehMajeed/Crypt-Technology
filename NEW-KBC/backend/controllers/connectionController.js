@@ -1,5 +1,6 @@
 const connectionService = require("../services/connectionService");
-const handleConnection = (socket, message) => {
+const handleConnection = (socket, message, data) => {
+  console.log(data);
   const parsedMessage = JSON.parse(message);
   console.log(message);
   if (parsedMessage.type === "connect-master") {
@@ -9,7 +10,7 @@ const handleConnection = (socket, message) => {
   } else if (parsedMessage.type === "connect-live") {
     connectionService.connectAsLive(socket);
   } else if (parsedMessage.type === "connect-finale-master") {
-    connectionService.connectAsFinaleMaster(socket);
+    connectionService.connectAsFinaleMaster(socket, data);
   } else if (parsedMessage.type === "connect-finale-candidate") {
     connectionService.connectAsFinaleCandidate(socket);
   }
@@ -49,8 +50,8 @@ const handleFinaleStartQuiz = async (socket, io) => {
   connectionService.finaleStartQuiz(socket, io);
 };
 
-const handleFinaleResetQuiz = (socket, io) => {
-  connectionService.finaleResetQuiz(socket, io);
+const handleFinaleResetQuiz = (data, socket, io) => {
+  connectionService.finaleResetQuiz(data, socket, io);
 };
 
 const handleFinaleStartTimer = (socket, io) => {

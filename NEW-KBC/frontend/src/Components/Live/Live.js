@@ -112,7 +112,7 @@ const Live = () => {
             <img
               src="./KBC_Logo.jpg"
               alt="Loading..."
-              style={{ width: "250px", height: "auto", mixBlendMode : 'color-dodge' }}
+              style={{ width: "250px", height: "auto" }}
             />
           </Pera>
         )}
