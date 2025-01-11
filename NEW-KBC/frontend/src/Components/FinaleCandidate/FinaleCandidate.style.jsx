@@ -273,6 +273,8 @@ export const Header = styled.div`
   }
 `;
 
+export const Logo = styled.div``;
+
 export const TimerCircle = styled.div`
   margin-top: 60px;
   background-color: #121212;
