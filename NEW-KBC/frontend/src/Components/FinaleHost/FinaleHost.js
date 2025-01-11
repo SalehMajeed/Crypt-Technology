@@ -56,7 +56,7 @@ function FinaleHost() {
 
   useEffect(() => {
     if (socket) {
-      socket.emit("connect-finale-master", {candidateType, indexSet});
+      socket.emit("connect-finale-master", { candidateType, indexSet });
     }
   }, [socket]);
 
@@ -199,7 +199,6 @@ function FinaleHost() {
                               ?.fifty || {}
                           ).includes(currentKey)
                         ) {
-                          console.log(data?.lifeLine?.fiftyOnce);
                           el = "-";
                         }
                         return (
@@ -207,21 +206,22 @@ function FinaleHost() {
                             key={index}
                             onClick={() => handleSubmitClick(el)}
                             className={`${data.submittedQuestion === el
-                                ? data.showResult
-                                  ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === el
-                                    ? "correct"
-                                    : "incorrect"
-                                  : "selected"
-                                : ""
+                              ? data.showResult
+                                ? data.distributedQuestion[data.questionIndex]
+                                  ?.correctAnswer === currentKey
+                                  ? "correct"
+                                  : "incorrect"
+                                : "selected"
+                              : ""
                               } ${data.showResult &&
                                 data.distributedQuestion[data.questionIndex]
-                                  ?.correctAnswer === el
+                                  ?.correctAnswer === currentKey
                                 ? "correct"
                                 : ""
                               }`}
                           >
-                            {el}
+                            <span>{currentKey}.</span>
+                            <span>{el}</span>
                           </Button>
                         );
                       })}
@@ -274,8 +274,8 @@ function FinaleHost() {
                     <li
                       style={{
                         backgroundColor: `${data?.questionIndex + 1 === el.squenceId
-                            ? "black"
-                            : ""
+                          ? "black"
+                          : ""
                           } `,
                       }}
                     >
