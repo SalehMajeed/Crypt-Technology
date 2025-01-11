@@ -15,7 +15,7 @@ import ticSound from "../assets/tick-sound.mp3";
 import themeSound from "../assets/theme-audio.mp3";
 import wrongSubmitSound from "../assets/wrong.mp3";
 import correctSubmitSound from "../assets/correct.mp3";
-import questionPlaySound from '../assets/play.mp3';
+import questionPlaySound from "../assets/play.mp3";
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
@@ -89,16 +89,16 @@ function FinaleHost() {
 
   const pauseTimer = () => {
     console.dir(hanldeClickSound);
-    hanldeClickSound.current.pause()
+    hanldeClickSound.current.pause();
     // hanldeClickSound.pause = true;
-  }
+  };
 
   const handleStopTimer = (name) => {
     socket.emit("stop-finale-timer", { lifeline: name });
   };
 
   const handleSubmitClick = (selectedAns) => {
-    hanldeClickSound.current.pause()
+    hanldeClickSound.current.pause();
     socket.emit("submit-finale-ans", {
       userAns: selectedAns,
     });
@@ -109,17 +109,17 @@ function FinaleHost() {
   };
 
   const handleNextQuestion = () => {
-    handleQuestionPlaySound.play()
+    handleQuestionPlaySound.play();
     socket.emit("finale-next-question");
   };
 
   const handleWinner = () => {
     handleCorrectSubmissionSound.play();
-  }
+  };
 
   const handleLooser = () => {
     handleWrongSound.play();
-  }
+  };
 
   return (
     <Container>
@@ -145,14 +145,19 @@ function FinaleHost() {
               <Button className="submit-btn" onClick={handleSubmitResponse}>
                 submit ans
               </Button>
-              
+
               <Button className="submit-btn" onClick={handleWinner}>
                 play winner
               </Button>
-              
+
               <Button className="submit-btn" onClick={handleLooser}>
                 play looser
               </Button>
+              <select className="dropDown">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Child">Other</option>
+              </select>
             </div>
             <Header>
               <TimerCircle>
