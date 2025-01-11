@@ -71,7 +71,11 @@ const Live = () => {
                     <ul>
                       {data.finalResults.map((eachResult, index) => (
                         <li key={index}>
-                          <ul className={eachResult.isWinner ? "winner" : "looser"}>
+                          <ul
+                            className={
+                              eachResult.isWinner ? "winner" : "looser"
+                            }
+                          >
                             <li>{eachResult.userId}</li>
                             <li>
                               {(eachResult.time / 1000).toFixed(3)} Seconds
@@ -99,7 +103,11 @@ const Live = () => {
                           </div>
                         </>
                       ) : (
-                        <div>Please wait for the timer to start...</div>
+                        <img
+                          src="./kbc-logo-champian3.png"
+                          alt="KBC logo champian 3"
+                          style={{ width: "550px", height: "auto" }}
+                        />
                       )}
                     </div>
                   </div>
@@ -108,11 +116,18 @@ const Live = () => {
             )}
           </div>
         ) : (
-          <Pera style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+          <Pera
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "90vh",
+            }}
+          >
             <img
-              src="./KBC_Logo.jpg"
+              src="./kbc-logo-champian3.png"
               alt="Loading..."
-              style={{ width: "250px", height: "auto", mixBlendMode : 'color-dodge' }}
+              style={{ width: "600px", height: "auto" }}
             />
           </Pera>
         )}
