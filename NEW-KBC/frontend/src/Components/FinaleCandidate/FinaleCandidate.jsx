@@ -80,59 +80,66 @@ function FinaleHost() {
               </TimerCircle>
             </Header>
             {data && data.distributedQuestion[data.questionIndex]?.question ? <div className="optionsDiv">
-              <p>{data.startQuiz ? data.distributedQuestion[data.questionIndex].question : "Loading question..."}</p>
+              <p style={{
+                color: data.startQuiz ? "" : "#020230"
+              }}>{data.startQuiz ? data.distributedQuestion[data.questionIndex].question : "Loading question..."}</p>
               {data.showOptions && data.distributedQuestion[data.questionIndex].options ? (
                 <div className="options">
                   {Object.keys(
                     data.distributedQuestion[data.questionIndex].options
                   ).map((currentKey, index) => {
                     let el = data.distributedQuestion[data.questionIndex].options[currentKey];
-                    if (
-                      data.startTimer === false &&
+                    const hasHide = data.startTimer === false &&
                       data.lifeLine.fiftyOnce &&
                       data.lifeLine.fifty === false &&
-                      Object.keys(data.distributedQuestion[data.questionIndex].fifty || {}).includes(currentKey)) {
-                      console.log(data.lifeLine.fiftyOnce)
+                      Object.keys(data.distributedQuestion[data.questionIndex].fifty || {}).includes(currentKey)
+                    if (hasHide) {
                       el = "50/50";
                     }
                     return (<Button
                       key={index}
-                      className={`${
-                            data.submittedQuestion === el
-                              ? data.showResult
-                                ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === el
-                                  ? "correct" 
-                                  : "incorrect" 
-                                : "selected"
-                              : ""
-                          } ${
-                            data.showResult &&
-                            data.distributedQuestion[data.questionIndex]
-                              ?.correctAnswer === el
-                              ? "correct" 
-                              : ""
-                          }`}
+                      style={{ color: hasHide? "#020230": "" }}
+                      className={`${data.submittedQuestion === el
+                        ? data.showResult
+                          ? data.distributedQuestion[data.questionIndex]
+                            ?.correctAnswer === el
+                            ? "correct"
+                            : "incorrect"
+                          : "selected"
+                        : ""
+                        } ${data.showResult &&
+                          data.distributedQuestion[data.questionIndex]
+                            ?.correctAnswer === el
+                          ? "correct"
+                          : ""
+                        }`}
                     >
                       {el}
                     </Button>)
                   })}
                 </div>
               ) : (
-                <p>Waiting for timer</p>
+                <p style={{
+                  color: data.startQuiz ? "" : "#020230"
+                }}>Waiting for timer</p>
               )}
             </div> : <div>Loading</div>}
 
           </div>
           <div className="sideBar">
             <div className="lifeLine">
-              <span>
+              <span className={`lifeline ${data?.lifeLine?.fifty ? "" : "used-lifeline"
+                }`}>
                 <img src={fiftyFiftyImg} alt="fifty_fifty.png" />
               </span>
-              <span>
+              <span className={`lifeline ${data?.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                }`}>
                 <img src={audiencePoll} alt="audience-poll" />
               </span>
-              {data?.questionIndex === 3 && <span>
+              {data?.questionIndex === 3 && <span
+                className={`lifeline ${data?.lifeLine?.askExpert ? "" : "used-lifeline"
+                  }`}
+              >
                 <img
                   className="expertLifeLine"
                   src={expertLifeLine}
@@ -144,10 +151,10 @@ function FinaleHost() {
               return (
                 <React.Fragment key={index}>
                   <li
-                      style={{
-                        backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "black" : ""
-                          } `,
-                      }}>
+                    style={{
+                      backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "#ffa800" : ""
+                        } `,
+                    }}>
                     <span className="indexOfPrice">{el.id}</span>
                     <span className="price">{el.amount}</span>
                   </li>

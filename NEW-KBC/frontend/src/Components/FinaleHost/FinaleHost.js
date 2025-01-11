@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import fiftyFiftyImg from "../assets/fifty_fifty.png";
 import audiencePoll from "../assets/audience_poll.png";
@@ -29,6 +30,11 @@ function FinaleHost() {
   const handleCorrectSubmissionSound = new Audio(correctSubmitSound);
   const handleQuestionPlaySound = new Audio(questionPlaySound);
 
+  const [searchParams] = useSearchParams();
+  const candidateType = searchParams.get("type");
+  const indexSet = searchParams.get("index");
+
+
   const moneyList = [
     { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
     { squenceId: 2, id: "2)", timer: 30, amount: "Rs. 1,000" },
@@ -39,15 +45,19 @@ function FinaleHost() {
     { squenceId: 7, id: "7)", timer: 60, amount: "Rs. 21,000" },
   ].reverse();
 
+  console.log(data);
   if (data && indexRef.current !== data?.questionIndex) {
+    console.log(data);
     const currentIndex = 6 - data.questionIndex;
-    setTimer(moneyList[currentIndex]?.timer);
+    const timer = moneyList[currentIndex]?.timer;
+    setTimer(timer);
     indexRef.current = data.questionIndex;
   }
 
   useEffect(() => {
     if (socket) {
-      socket.emit("connect-finale-master");
+      console.log({candidateType, indexSet});
+      socket.emit("connect-finale-master", {candidateType, indexSet});
     }
   }, [socket]);
 
@@ -94,6 +104,7 @@ function FinaleHost() {
   };
 
   const handleStopTimer = (name) => {
+    hanldeClickSound.current.pause()
     socket.emit("stop-finale-timer", { lifeline: name });
   };
 
@@ -109,7 +120,6 @@ function FinaleHost() {
   };
 
   const handleNextQuestion = () => {
-    handleQuestionPlaySound.play();
     socket.emit("finale-next-question");
   };
 
@@ -178,40 +188,38 @@ function FinaleHost() {
                       ).map((currentKey, index) => {
                         let el =
                           data.distributedQuestion[data.questionIndex].options[
-                            currentKey
+                          currentKey
                           ];
                         if (
                           data.startTimer === false &&
-                          data.lifeLine.fiftyOnce &&
-                          data.lifeLine.fifty === false &&
+                          data?.lifeLine?.fiftyOnce &&
+                          data?.lifeLine?.fifty === false &&
                           Object.keys(
                             data.distributedQuestion[data.questionIndex]
-                              .fifty || {}
+                              ?.fifty || {}
                           ).includes(currentKey)
                         ) {
-                          console.log(data.lifeLine.fiftyOnce);
+                          console.log(data?.lifeLine?.fiftyOnce);
                           el = "50/50";
                         }
                         return (
                           <Button
                             key={index}
                             onClick={() => handleSubmitClick(el)}
-                            className={`${
-                              data.submittedQuestion === el
+                            className={`${data.submittedQuestion === el
                                 ? data.showResult
                                   ? data.distributedQuestion[data.questionIndex]
-                                      ?.correctAnswer === el
+                                    ?.correctAnswer === el
                                     ? "correct"
                                     : "incorrect"
                                   : "selected"
                                 : ""
-                            } ${
-                              data.showResult &&
-                              data.distributedQuestion[data.questionIndex]
-                                ?.correctAnswer === el
+                              } ${data.showResult &&
+                                data.distributedQuestion[data.questionIndex]
+                                  ?.correctAnswer === el
                                 ? "correct"
                                 : ""
-                            }`}
+                              }`}
                           >
                             {el}
                           </Button>
@@ -224,13 +232,12 @@ function FinaleHost() {
               <div>Loading</div>
             )}
           </div>
-          {data && (
+          {data && data?.lifeLine && (
             <div className="sideBar">
               <div className="lifeLine">
                 <span
-                  className={`lifeline ${
-                    data.lifeLine?.fifty ? "" : "used-lifeline"
-                  }`}
+                  className={`lifeline ${data?.lifeLine?.fifty ? "" : "used-lifeline"
+                    }`}
                 >
                   <img
                     src={fiftyFiftyImg}
@@ -239,9 +246,8 @@ function FinaleHost() {
                   />
                 </span>
                 <span
-                  className={`lifeline ${
-                    data.lifeLine?.audiencePaul ? "" : "used-lifeline"
-                  }`}
+                  className={`lifeline ${data?.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                    }`}
                 >
                   <img
                     src={audiencePoll}
@@ -251,9 +257,8 @@ function FinaleHost() {
                 </span>
                 {data.questionIndex === 3 && (
                   <span
-                    className={`lifeline ${
-                      data.lifeLine?.askExpert ? "" : "used-lifeline"
-                    }`}
+                    className={`lifeline ${data?.lifeLine?.askExpert ? "" : "used-lifeline"
+                      }`}
                   >
                     <img
                       src={expertLifeLine}
@@ -268,11 +273,10 @@ function FinaleHost() {
                   <React.Fragment key={index}>
                     <li
                       style={{
-                        backgroundColor: `${
-                          data?.questionIndex + 1 === el.squenceId
+                        backgroundColor: `${data?.questionIndex + 1 === el.squenceId
                             ? "black"
                             : ""
-                        } `,
+                          } `,
                       }}
                     >
                       <span className="indexOfPrice">{el.id}</span>
