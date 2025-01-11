@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef } from "react";
 import SocketContext from "../../contexts/SocketContext";
 import { Container, Button, Pera, CardWrapper } from "./Master.styles";
-import resetTimeSound from '../assets/start.mp3';
-import playSound from '../assets/play.mp3';
-import timerSound from '../assets/tictok.mp3';
+import resetTimeSound from "../assets/start.mp3";
+import playSound from "../assets/play.mp3";
+import timerSound from "../assets/tictok.mp3";
 
 const startSound = new Audio(resetTimeSound);
 
@@ -39,8 +39,8 @@ const Master = () => {
   };
 
   const handleStartTheme = () => {
-    startSound.play()
-  }
+    startSound.play();
+  };
 
   return (
     <Container>
