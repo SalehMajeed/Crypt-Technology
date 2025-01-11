@@ -51,6 +51,9 @@ const Live = () => {
   return (
     <Container>
       <CardWrapper>
+        <Logo>
+          <img src="./organization.png" alt="KBC Logo" style={{height : '150px'}}/>
+        </Logo>
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
             {data.waitForMaster ? (

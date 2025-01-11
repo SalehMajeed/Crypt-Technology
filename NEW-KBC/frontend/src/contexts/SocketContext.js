@@ -8,7 +8,7 @@ export const SocketProvider = ({ children }) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3000');
+    const newSocket = io('http://192.168.225.194:3000');
     setSocket(newSocket);
     
     newSocket.on('master-connected', (data) => {

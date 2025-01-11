@@ -82,6 +82,7 @@ const resetFinaleInitialState = () => {
 
 const connectAsMaster = async (socket) => {
   let isConnected = true;
+  connectedUser = [];
   if (masterSocket) {
     console.log("Master already connected");
     isConnected = false;
@@ -112,9 +113,10 @@ const connectAsMaster = async (socket) => {
   // }
 };
 
-const connectAsCandidate = (socket) => {
+const connectAsCandidate = (socket, data) => {
   let isConnected = true;
   const totalCandidates = getRoleCount("candidate");
+  console.log(data);
   if (totalCandidates >= maxCandidates) {
     console.log("Candidate limit reached");
     isConnected = false;
@@ -218,7 +220,7 @@ const submitResponse = (data, io) => {
     joinId,
     time: finalAns.length <= 0 ? 3000 : time,
     ans: finalAns,
-    correctAns: rightAns.trim() === finalAns,
+    correctAns: rightAns?.trim() === finalAns,
     isWinner: false,
   };
   const doesUserSubmitted = responseTimes.some(eachTime => eachTime.userId === finalResponse.userId);

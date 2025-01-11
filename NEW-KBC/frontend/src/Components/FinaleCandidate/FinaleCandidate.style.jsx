@@ -17,6 +17,7 @@ export const Container = styled.div`
   font-family: "Poppins", sans-serif;
 `;
 
+
 export const Pera = styled.h2`
   width: 20%;
   margin: 10px auto;
@@ -273,7 +274,9 @@ export const Header = styled.div`
   }
 `;
 
-export const Logo = styled.div``;
+export const Logo = styled.div`
+float : left;
+`;
 
 export const TimerCircle = styled.div`
   margin-top: 60px;

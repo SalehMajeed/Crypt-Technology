@@ -6,7 +6,7 @@ const handleConnection = (socket, message, data) => {
   if (parsedMessage.type === "connect-master") {
     connectionService.connectAsMaster(socket);
   } else if (parsedMessage.type === "connect-candidate") {
-    connectionService.connectAsCandidate(socket);
+    connectionService.connectAsCandidate(socket, data);
   } else if (parsedMessage.type === "connect-live") {
     connectionService.connectAsLive(socket);
   } else if (parsedMessage.type === "connect-finale-master") {

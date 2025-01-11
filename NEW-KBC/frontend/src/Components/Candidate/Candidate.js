@@ -7,6 +7,7 @@ import {
   Question,
   CardWrapper,
   TimerCircle,
+  Logo,
   Header,
   Button,
 } from "./Candidate.styles.js";
@@ -21,7 +22,7 @@ const Candidate = () => {
 
   useEffect(() => {
     if (socket && socket?.connected === false) {
-      socket.emit("connect-candidate");
+      socket.emit("connect-candidate", {joinId});
     }
   }, [socket]);
 
@@ -84,6 +85,9 @@ const Candidate = () => {
   return (
     <Container>
       <CardWrapper>
+        <Logo>
+          <img src="./organization.png" alt="KBC Logo" style={{ height: '150px' }} />
+        </Logo>
         {socket && socket.connected && data && data.startQuiz ? (
           <div className="elementsDiv">
             {/* <div className="quizElements"> */}

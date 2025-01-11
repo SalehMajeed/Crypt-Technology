@@ -133,7 +133,10 @@ export const Pera = styled.h2`
 // ======================================
 
 // import styled from "styled-components";
-export const Logo = styled.div``;
+export const Logo = styled.div`
+float : left;
+height : 100px;
+`;
 
 export const Container = styled.div`
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
@@ -174,6 +177,9 @@ export const CardWrapper = styled.div`
   color: white;
   text-align: center;
   font-size: 1.8rem;
+  img{
+  height : 100px;
+  }
 
   .winner {
     display:flex;

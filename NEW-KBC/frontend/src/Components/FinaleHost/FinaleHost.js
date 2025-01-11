@@ -20,7 +20,7 @@ import questionPlaySound from "../assets/play.mp3";
 
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(45);
   const [winner, setWinner] = useState(null);
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
@@ -36,11 +36,11 @@ function FinaleHost() {
 
 
   const moneyList = [
-    { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
-    { squenceId: 2, id: "2)", timer: 30, amount: "Rs. 1,000" },
-    { squenceId: 3, id: "3)", timer: 30, amount: "Rs. 2,000" },
+    { squenceId: 1, id: "1)", timer: 45, amount: "Rs. 500" },
+    { squenceId: 2, id: "2)", timer: 45, amount: "Rs. 1,000" },
+    { squenceId: 3, id: "3)", timer: 45, amount: "Rs. 2,000" },
     { squenceId: 4, id: "4)", timer: 45, amount: "Rs. 4,000" },
-    { squenceId: 5, id: "5)", timer: 45, amount: "Rs. 8,000" },
+    { squenceId: 5, id: "5)", timer: 60, amount: "Rs. 7,000" },
     { squenceId: 6, id: "6)", timer: 60, amount: "Rs. 15,000" },
     { squenceId: 7, id: "7)", timer: 60, amount: "Rs. 21,000" },
   ].reverse();
@@ -67,7 +67,7 @@ function FinaleHost() {
           if (prevTime <= 1) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
-            setTimer(30);
+            setTimer(45);
             return 0;
           }
           return prevTime - 1;

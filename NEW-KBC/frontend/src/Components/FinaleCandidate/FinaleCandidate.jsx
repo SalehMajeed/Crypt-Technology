@@ -20,18 +20,18 @@ const timerSound = new Audio("../assets/tick-sound.mp3");
 function FinaleHost() {
   const { socket, data } = useContext(SocketContext);
 
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(45);
   const [selectedAnswer, setSelectedAnswer] = useState([]);
   const [winner, setWinner] = useState(null);
   const intervalRef = useRef(null);
   const indexRef = useRef(null);
 
   const moneyList = [
-    { squenceId: 1, id: "1)", timer: 30, amount: "Rs. 500" },
-    { squenceId: 2, id: "2)", timer: 30, amount: "Rs. 1,000" },
-    { squenceId: 3, id: "3)", timer: 30, amount: "Rs. 2,000" },
+    { squenceId: 1, id: "1)", timer: 45, amount: "Rs. 500" },
+    { squenceId: 2, id: "2)", timer: 45, amount: "Rs. 1,000" },
+    { squenceId: 3, id: "3)", timer: 45, amount: "Rs. 2,000" },
     { squenceId: 4, id: "4)", timer: 45, amount: "Rs. 4,000" },
-    { squenceId: 5, id: "5)", timer: 45, amount: "Rs. 8,000" },
+    { squenceId: 5, id: "5)", timer: 60, amount: "Rs. 7,000" },
     { squenceId: 6, id: "6)", timer: 60, amount: "Rs. 15,000" },
     { squenceId: 7, id: "7)", timer: 60, amount: "Rs. 21,000" },
   ].reverse();
@@ -55,7 +55,7 @@ function FinaleHost() {
           if (prevTime <= 1) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
-            setTimer(30);
+            setTimer(45);
             return 0;
           }
           return prevTime - 1;
@@ -72,6 +72,9 @@ function FinaleHost() {
   return (
     <Container>
       <CardWrapper>
+        <Logo>
+          <img src="./organization.png" alt="KBC Logo" style={{ height: "150px" }} />
+        </Logo>
         <div className="elementsDiv">
           <div className="quizElements">
             <Header>
@@ -87,14 +90,14 @@ function FinaleHost() {
                     : "Loading question..."}
                 </p>
                 {data.showOptions &&
-                data.distributedQuestion[data.questionIndex].options ? (
+                  data.distributedQuestion[data.questionIndex].options ? (
                   <div className="options">
                     {Object.keys(
                       data.distributedQuestion[data.questionIndex].options
                     ).map((currentKey, index) => {
                       let el =
                         data.distributedQuestion[data.questionIndex].options[
-                          currentKey
+                        currentKey
                         ];
                       if (
                         data.startTimer === false &&
@@ -102,7 +105,7 @@ function FinaleHost() {
                         data.lifeLine.fifty === false &&
                         Object.keys(
                           data.distributedQuestion[data.questionIndex].fifty ||
-                            {}
+                          {}
                         ).includes(currentKey)
                       ) {
                         el = "-";
@@ -110,22 +113,20 @@ function FinaleHost() {
                       return (
                         <Button
                           key={index}
-                          className={`${
-                            data.submittedQuestion === el
+                          className={`${data.submittedQuestion === el
                               ? data.showResult
                                 ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === currentKey
+                                  ?.correctAnswer === currentKey
                                   ? "correct"
                                   : "incorrect"
                                 : "selected"
                               : ""
-                          } ${
-                            data.showResult &&
-                            data.distributedQuestion[data.questionIndex]
-                              ?.correctAnswer === currentKey
+                            } ${data.showResult &&
+                              data.distributedQuestion[data.questionIndex]
+                                ?.correctAnswer === currentKey
                               ? "correct"
                               : ""
-                          }`}
+                            }`}
                         >
                           <>
                             <span>{currentKey}.</span>
@@ -152,16 +153,14 @@ function FinaleHost() {
           <div className="sideBar">
             <div className="lifeLine">
               <span
-                className={`lifeline ${
-                  data?.lifeLine?.fifty ? "" : "used-lifeline"
-                }`}
+                className={`lifeline ${data?.lifeLine?.fifty ? "" : "used-lifeline"
+                  }`}
               >
                 <img src={fiftyFiftyImg} alt="fifty_fifty.png" />
               </span>
               <span
-                className={`lifeline ${
-                  data?.lifeLine?.audiencePaul ? "" : "used-lifeline"
-                }`}
+                className={`lifeline ${data?.lifeLine?.audiencePaul ? "" : "used-lifeline"
+                  }`}
               >
                 <img src={audiencePoll} alt="audience-poll" />
               </span>
@@ -180,9 +179,8 @@ function FinaleHost() {
                 <React.Fragment key={index}>
                   <li
                     style={{
-                      backgroundColor: `${
-                        data?.questionIndex + 1 === el.squenceId ? "black" : ""
-                      } `,
+                      backgroundColor: `${data?.questionIndex + 1 === el.squenceId ? "#E69500" : index === 3 ? "#32CD32" : ""
+                        } `,
                     }}
                   >
                     <span className="indexOfPrice">{el.id}</span>

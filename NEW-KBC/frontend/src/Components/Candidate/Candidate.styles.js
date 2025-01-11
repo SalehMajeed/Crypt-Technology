@@ -9,6 +9,11 @@ export const Pera = styled.h2`
   font-size: 2rem;
 `;
 
+export const Logo = styled.div`
+float : left;
+height : 60px;
+`
+
 export const Question = styled.p`
   background: linear-gradient(#100241, #000);
   border: 1px solid #ffa800;
