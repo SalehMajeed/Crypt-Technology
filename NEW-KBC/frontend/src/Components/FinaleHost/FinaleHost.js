@@ -56,7 +56,7 @@ function FinaleHost() {
 
   useEffect(() => {
     if (socket) {
-      socket.emit("connect-finale-master", {candidateType, indexSet});
+      socket.emit("connect-finale-master", { candidateType, indexSet });
     }
   }, [socket]);
 
@@ -206,13 +206,13 @@ function FinaleHost() {
                             key={index}
                             onClick={() => handleSubmitClick(el)}
                             className={`${data.submittedQuestion === el
-                                ? data.showResult
-                                  ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === currentKey
-                                    ? "correct"
-                                    : "incorrect"
-                                  : "selected"
-                                : ""
+                              ? data.showResult
+                                ? data.distributedQuestion[data.questionIndex]
+                                  ?.correctAnswer === currentKey
+                                  ? "correct"
+                                  : "incorrect"
+                                : "selected"
+                              : ""
                               } ${data.showResult &&
                                 data.distributedQuestion[data.questionIndex]
                                   ?.correctAnswer === currentKey
@@ -220,7 +220,8 @@ function FinaleHost() {
                                 : ""
                               }`}
                           >
-                            {el}
+                            <span>{currentKey}.</span>
+                            <span>{el}</span>
                           </Button>
                         );
                       })}
@@ -273,8 +274,8 @@ function FinaleHost() {
                     <li
                       style={{
                         backgroundColor: `${data?.questionIndex + 1 === el.squenceId
-                            ? "black"
-                            : ""
+                          ? "black"
+                          : ""
                           } `,
                       }}
                     >
