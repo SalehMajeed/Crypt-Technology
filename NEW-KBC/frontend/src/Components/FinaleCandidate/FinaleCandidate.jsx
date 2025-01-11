@@ -105,8 +105,7 @@ function FinaleHost() {
                             {}
                         ).includes(currentKey)
                       ) {
-                        console.log(data.lifeLine.fiftyOnce);
-                        el = "50/50";
+                        el = "-";
                       }
                       return (
                         <Button
@@ -115,7 +114,7 @@ function FinaleHost() {
                             data.submittedQuestion === el
                               ? data.showResult
                                 ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === el
+                                    ?.correctAnswer === currentKey
                                   ? "correct"
                                   : "incorrect"
                                 : "selected"
@@ -123,13 +122,13 @@ function FinaleHost() {
                           } ${
                             data.showResult &&
                             data.distributedQuestion[data.questionIndex]
-                              ?.correctAnswer === el
+                              ?.correctAnswer === currentKey
                               ? "correct"
                               : ""
                           }`}
                         >
                           <>
-                            <span>{currentKey}</span>
+                            <span>{currentKey}.</span>
                             <span>{el}</span>
                           </>
                         </Button>

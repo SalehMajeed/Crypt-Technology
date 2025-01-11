@@ -199,7 +199,6 @@ function FinaleHost() {
                               ?.fifty || {}
                           ).includes(currentKey)
                         ) {
-                          console.log(data?.lifeLine?.fiftyOnce);
                           el = "-";
                         }
                         return (
@@ -209,14 +208,14 @@ function FinaleHost() {
                             className={`${data.submittedQuestion === el
                                 ? data.showResult
                                   ? data.distributedQuestion[data.questionIndex]
-                                    ?.correctAnswer === el
+                                    ?.correctAnswer === currentKey
                                     ? "correct"
                                     : "incorrect"
                                   : "selected"
                                 : ""
                               } ${data.showResult &&
                                 data.distributedQuestion[data.questionIndex]
-                                  ?.correctAnswer === el
+                                  ?.correctAnswer === currentKey
                                 ? "correct"
                                 : ""
                               }`}
