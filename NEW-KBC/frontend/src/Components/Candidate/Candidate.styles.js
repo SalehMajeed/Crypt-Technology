@@ -49,6 +49,10 @@ export const CardWrapper = styled.div`
   text-align: center;
   font-size: 2rem;
 
+.winners{
+  display:flex;
+  margin:0 auto;
+}
   .options {
     display: grid;
     grid-gap : -10px;

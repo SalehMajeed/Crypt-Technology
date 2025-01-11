@@ -76,7 +76,7 @@ const Live = () => {
                               eachResult.isWinner ? "winner" : "looser"
                             }
                           >
-                            <li>{eachResult.userId}</li>
+                            <li>{eachResult.joinId}</li>
                             <li>
                               {(eachResult.time / 1000).toFixed(3)} Seconds
                             </li>

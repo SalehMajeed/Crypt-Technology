@@ -177,26 +177,33 @@ export const CardWrapper = styled.div`
 
   .winner {
     display:flex;
+    margin:0 auto;
     align-items:center;
     justify-content:center;
     background-color: green; 
     width:max-content;
+    border-radius:30px;
   }
 
   .winner li{
+    margin:0 auto;
+    border-radius:30px;
     background-color: green; 
     width:max-content;
   }
 
   .looser {
+    margin:0 auto;
     display:flex;
     justify-content:center;
     background-color: red; 
+    border-radius:30px;
     width:max-content;
   }
 
   .looser li {
     background-color: red; 
+    border-radius:30px;
     width:max-content;
   }
 
@@ -251,6 +258,7 @@ export const CardWrapper = styled.div`
     border-bottom: 1px solid #ffa800;
     justify-content: space-between;
     background: #020230;
+    border-radius:10px;
     padding: 8px;
     color: white;
     text-align: center;

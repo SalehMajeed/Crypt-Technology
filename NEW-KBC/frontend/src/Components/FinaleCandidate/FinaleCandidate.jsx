@@ -128,7 +128,6 @@ function FinaleHost() {
                           }`}
                         >
                           <>
-
                             <span>{currentKey}.</span>
                             <span>{el}</span>
                           </>
