@@ -107,7 +107,7 @@ const Candidate = () => {
                       {data.finalResults.map((eachResult, index) => (
                         <li key={index}>
                           {
-                            <ul color={eachResult.isWinner ? "green" : "red"}>
+                            <ul color={eachResult.isWinner ? "green" : "red"} className="winners">
                               <li>{eachResult.joinId}</li>
                               <li>
                                 {(eachResult.time / 1000).toFixed(3)} Seconds
