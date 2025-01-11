@@ -91,7 +91,7 @@ const Live = () => {
                             {Object.entries(distributedQuestion.options).map(
                               ([key, value]) => (
                                 <Button key={key}>
-                                  <span>{`${key})`}</span>
+                                  <span>{`${key}.`}</span>
                                   {value}
                                 </Button>
                               )

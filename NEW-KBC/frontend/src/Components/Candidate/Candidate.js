@@ -13,7 +13,7 @@ import {
 
 const Candidate = () => {
   const { socket, data } = useContext(SocketContext);
-  const [timer, setTimer] = useState(15);
+  const [timer, setTimer] = useState(30);
   const intervalRef = useRef(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [searchParams] = useSearchParams();
@@ -94,7 +94,7 @@ const Candidate = () => {
                 {data.finalResults ? <div>
                   <ul>
                     {data.finalResults.map((eachResult, index) => <li key={index}>{
-                      <ul color={eachResult.isWinner ? 'green' : 'red'}>
+                      <ul color={eachResult.isWinner ? 'green' : 'red'} className='winners'>
                         <li>{eachResult.joinId}</li>
                         <li>{(eachResult.time / 1000).toFixed(3)} Seconds</li>
                       </ul>

@@ -213,7 +213,12 @@ function FinaleHost() {
                                 : ""
                             }`}
                           >
-                            {el}
+                            {
+                            <>
+                              <span>{currentKey}.</span>
+                              <span>{el}</span>
+                            </>
+                          }
                           </Button>
                         );
                       })}

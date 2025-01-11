@@ -175,10 +175,14 @@ export const CardWrapper = styled.div`
   text-align: center;
   font-size: 1.8rem;
 
+  ul {
+    padding-left: 0;
+}
   .winner {
     display:flex;
-    align-items:center;
-    justify-content:center;
+    margin: 0 auto;
+    ${'' /* align-items:center;
+    justify-content:center; */}
     background-color: green; 
     width:max-content;
   }
@@ -187,12 +191,14 @@ export const CardWrapper = styled.div`
     background-color: green; 
     width:max-content;
   }
-
+  
   .looser {
     display:flex;
-    justify-content:center;
+    margin: 0 auto;
+    border-radius:40px;
     background-color: red; 
-    width:max-content;
+    ${'' /* justify-content:center; */}
+    ${'' /* width:max-content; */}
   }
 
   .looser li {
@@ -250,11 +256,12 @@ export const CardWrapper = styled.div`
     display: flex;
     border-bottom: 1px solid #ffa800;
     justify-content: space-between;
+    border-radius:10px;
     background: #020230;
     padding: 8px;
     color: white;
     text-align: center;
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     font-weight: 400;
     margin: 10px;
   }
